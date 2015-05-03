@@ -5,7 +5,7 @@
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>43b591c0-2dd4-486d-b5da-6fc375ea672a</ProjectGuid>
+    <ProjectGuid>{BBDB81B8-5160-4518-9519-67CF0CBAED11}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Othello</RootNamespace>
@@ -32,6 +32,20 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="DataFromConsole.cs" />
+    <Compile Include="ePlayers.cs" />
+    <Compile Include="GameBoard.cs" />
+    <Compile Include="Player.cs" />
+    <Compile Include="View.cs" />
+    <Compile Include="Program.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Ex02.ConsoleUtils">
+      <HintPath>..\..\..\temp\Ex02.ConsoleUtils.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
