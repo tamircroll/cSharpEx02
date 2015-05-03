@@ -8,13 +8,13 @@ namespace Othello
 
     public class GameBoard
     {
-        private readonly int _size;
+        private readonly int r_Size;
 
         public int Size
         {
             get
             {
-                return _size;
+                return r_Size;
             } 
         }
 
@@ -23,14 +23,14 @@ namespace Othello
             get; set;
         }
 
-        public GameBoard(int i_Size)
+        public GameBoard(int iSize)
         {
-            _size = i_Size;
-            Board = new ePlayers[i_Size, i_Size];
-            Board[i_Size / 2, i_Size / 2] = ePlayers.Player1;
-            Board[(i_Size / 2) - 1, (i_Size / 2) - 1] = ePlayers.Player1;
-            Board[i_Size / 2, (i_Size / 2) - 1] = ePlayers.Player2;
-            Board[(i_Size / 2) - 1, i_Size / 2] = ePlayers.Player2;
+            r_Size = iSize;
+            Board = new ePlayers[iSize, iSize];
+            Board[iSize / 2, iSize / 2] = ePlayers.Player1;
+            Board[(iSize / 2) - 1, (iSize / 2) - 1] = ePlayers.Player1;
+            Board[iSize / 2, (iSize / 2) - 1] = ePlayers.Player2;
+            Board[(iSize / 2) - 1, iSize / 2] = ePlayers.Player2;
         }
     }
 }

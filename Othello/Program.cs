@@ -6,8 +6,8 @@
 
     public class Program
     {
-        private static GameBoard board;
-        private static Player player1, player2;
+        private static GameBoard s_Board;
+        private static Player s_Player1, s_Player2;
 
         public static void Main()
         {
@@ -17,7 +17,7 @@
         private static void startNewGame()
         {
             eGameType gameType = chooseGameType();
-            int boardSize = DataFromConsole.getBoardSize();
+            int boardSize = DataFromConsole.GetBoardSize();
 
             initParams(gameType, boardSize);
             string numOfPlayersStr = (gameType == eGameType.OnePlayer) ? "One player" : "Two players";
@@ -30,22 +30,24 @@
 
         private static void initParams(eGameType gameType, int i_boardSize)
         {
-            board = new GameBoard(i_boardSize);
-            player1 = new Player(DataFromConsole.getPlayerName("First"));
+            s_Board = new GameBoard(i_boardSize);
+            s_Player1 = new Player(DataFromConsole.GetPlayerName("First"), ePlayers.Player1);
             if (gameType == eGameType.OnePlayer)
             {
-                player2 = new Player("Computer");
+                s_Player2 = new Player("Computer");
             }
             else
             {
-                player2 = new Player(DataFromConsole.getPlayerName("Second"));
+                s_Player2 = new Player(DataFromConsole.GetPlayerName("Second"), ePlayers.Player2);
             }
         }
 
         private static void startGame(eGameType gameType)
         {
-            View.DrawBoard(board);
+            View.DrawBoard(s_Board);
+            Console.WriteLine();
             Console.ReadLine();
+
         }
 
         public enum eGameType

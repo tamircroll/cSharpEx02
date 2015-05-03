@@ -33,6 +33,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Controller.cs" />
     <Compile Include="DataFromConsole.cs" />
     <Compile Include="ePlayers.cs" />
     <Compile Include="GameBoard.cs" />

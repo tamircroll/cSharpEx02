@@ -1,4 +1,6 @@
-﻿namespace Othello
+﻿using System.Globalization;
+
+namespace Othello
 {
     using System;
     using System.Collections.Generic;
@@ -18,16 +20,21 @@
                 Console.Write("   " + (column++));
             }
 
-            Console.WriteLine(" ");
+            Console.WriteLine("  ");
             for (int j = 0; j < boardSize; j++)
             {
-                Console.Write(" ");
+                Console.Write("  ");
                 for (int i = 0; i < (boardSize * 4) + 1; i++)
                 {
                     Console.Write("=");
                 }
 
                 Console.WriteLine();
+                if ((j + 1) <= 9)
+                {
+                    Console.Write(" ");
+                }
+
                 Console.Write(j + 1);
                 for (int i = 0; i < boardSize; i++)
                 {

@@ -2,9 +2,9 @@
 
 namespace Othello
 {
-    public class DataFromConsole
+    internal class DataFromConsole
     {
-        internal static string getPlayerName(string i_playerType)
+        internal static string GetPlayerName(string i_playerType)
         {
             string playerName;
 
@@ -23,7 +23,7 @@ namespace Othello
             }
         }
 
-        internal static int getBoardSize()
+        internal static int GetBoardSize()
         {
             int boardSizeInt;
             string boardSizeStr;

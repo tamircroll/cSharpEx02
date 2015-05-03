@@ -6,16 +6,23 @@
 
     public class Player
     {
-        public readonly string Name;
+        public readonly string r_Name;
+        public readonly ePlayers r_PlayerEnum;
 
-        public Player(string i_Name)
-        {
-            Name = i_Name;
+        public string Name {
+            get { return r_Name; }
         }
 
-        public string getName()
+        public ePlayers PlayerEnum
         {
-            return Name;
+            get { return r_PlayerEnum; }
+        }
+
+
+        public Player(string i_Name, ePlayers i_PlayerEnum)
+        {
+            r_Name = i_Name;
+            r_PlayerEnum = i_PlayerEnum;
         }
     }
 }
