@@ -6,8 +6,8 @@
 
     public class Player
     {
-        public readonly string r_Name;
-        public readonly ePlayers r_PlayerEnum;
+        private readonly string r_Name;
+        private readonly ePlayers r_PlayerEnum;
 
         public string Name {
             get { return r_Name; }

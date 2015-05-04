@@ -44,11 +44,12 @@ namespace Othello
                 Console.WriteLine("|");
             }
 
-            Console.Write(" ");
+            Console.Write("  ");
             for (int i = 0; i < (boardSize * 4) + 1; i++)
             {
                 Console.Write("=");
             }
+            Console.WriteLine();
         }
 
         private static string getCellSign(ePlayers ePlayers)

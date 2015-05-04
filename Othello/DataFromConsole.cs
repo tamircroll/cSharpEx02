@@ -34,12 +34,36 @@ namespace Othello
                 Console.WriteLine("Please enter the wanted board size and press Enter");
                 boardSizeStr = Console.ReadLine();
                 bool goodInput = int.TryParse(boardSizeStr, out boardSizeInt);
-                if (goodInput && boardSizeInt >= 8)
+                if (goodInput && boardSizeInt >= 8 && boardSizeInt < 26)
                 {
                     return boardSizeInt;
                 }
 
                 Ex02.ConsoleUtils.Screen.Clear();
+                Console.WriteLine("Invalid input! Please try again:");
+            }
+        }
+
+        public static Program.eGameType ChooseGameType()
+        {
+            while (true)
+            {
+                Ex02.ConsoleUtils.Screen.Clear();
+                Console.WriteLine(
+@"To Start a new Othello game please choose a game type and press Enter:
+1) one player game 
+2) two players game.");
+                string gameType = Console.ReadLine();
+
+                if (gameType == ((int)Program.eGameType.OnePlayer).ToString())
+                {
+                    return Program.eGameType.OnePlayer;
+                }
+                else if (gameType == ((int)Program.eGameType.TwoPlayers).ToString())
+                {
+                    return Program.eGameType.TwoPlayers;
+                }
+
                 Console.WriteLine("Invalid input! Please try again:");
             }
         }

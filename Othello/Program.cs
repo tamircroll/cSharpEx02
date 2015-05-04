@@ -6,8 +6,10 @@
 
     public class Program
     {
+        private const string k_ExitGame = "Q";
         private static GameBoard s_Board;
         private static Player s_Player1, s_Player2;
+        private static Controller s_Controller;
 
         public static void Main()
         {
@@ -16,67 +18,92 @@
 
         private static void startNewGame()
         {
-            eGameType gameType = chooseGameType();
+            eGameType gameType = DataFromConsole.ChooseGameType();
             int boardSize = DataFromConsole.GetBoardSize();
 
             initParams(gameType, boardSize);
             string numOfPlayersStr = (gameType == eGameType.OnePlayer) ? "One player" : "Two players";
             Ex02.ConsoleUtils.Screen.Clear();
-            Console.WriteLine(string.Format("{0} game was chosen, Press Enter to begin", numOfPlayersStr));
+            string msg = string.Format("{0} game was chosen, Press Enter to begin", numOfPlayersStr);
+            Console.WriteLine(msg);
             Console.ReadLine();
             Ex02.ConsoleUtils.Screen.Clear();
-            startGame(gameType);
+            startPlay(gameType);
         }
 
         private static void initParams(eGameType gameType, int i_boardSize)
         {
             s_Board = new GameBoard(i_boardSize);
-            s_Player1 = new Player(DataFromConsole.GetPlayerName("First"), ePlayers.Player1);
+            s_Controller = new Controller(s_Board);
+            string playerName = DataFromConsole.GetPlayerName("First");
+            s_Player1 = new Player(playerName, ePlayers.Player1);
             if (gameType == eGameType.OnePlayer)
             {
-                s_Player2 = new Player("Computer");
+                s_Player2 = new Player("Computer", ePlayers.Player2);
             }
             else
             {
-                s_Player2 = new Player(DataFromConsole.GetPlayerName("Second"), ePlayers.Player2);
+                playerName = DataFromConsole.GetPlayerName("Second");
+                s_Player2 = new Player(playerName, ePlayers.Player2);
             }
         }
 
-        private static void startGame(eGameType gameType)
+        private static void startPlay(eGameType i_GameType)
         {
-            View.DrawBoard(s_Board);
-            Console.WriteLine();
-            Console.ReadLine();
+            while (!s_Controller.IsGameOver())
+            {
+                string badMsg = "";
+                while (true)
+                {
+                    Ex02.ConsoleUtils.Screen.Clear();
+                    View.DrawBoard(s_Board);
+                    Console.WriteLine(badMsg);
+                    Console.WriteLine(String.Format("{0}, please write your play and press Enter:", s_Player1.Name));
+                    string playedCell = Console.ReadLine();
+                    if (playedCell == k_ExitGame)
+                    {
+                        return;
+                    }
 
+                    if (s_Controller.TryPlayMove(s_Player1, playedCell, ref badMsg))
+                    {
+                        break;
+                    }
+                }
+
+                if (s_Controller.IsGameOver())
+                {
+                    s_Controller.ShowScore();
+                    break;
+                }
+
+                badMsg = "";
+                while (true)
+                {
+                    Ex02.ConsoleUtils.Screen.Clear();
+                    View.DrawBoard(s_Board);
+                    Console.WriteLine(badMsg);
+                    Console.WriteLine("Player TWO turn, please enter the desired cell:");
+                    string playedCell = Console.ReadLine();
+                    if (playedCell == k_ExitGame)
+                    {
+                        return;
+                    }
+ 
+                    if (s_Controller.TryPlayMove(s_Player2, playedCell, ref badMsg))
+                    {
+                        break;
+                    }
+                    Console.WriteLine(badMsg);
+                }
+            }
+            startNewGame();
         }
 
         public enum eGameType
         {
             OnePlayer = 1,
             TwoPlayers = 2
-        }
-
-        private static eGameType chooseGameType()
-        {
-            Ex02.ConsoleUtils.Screen.Clear();
-            while (true)
-            {
-                Console.WriteLine(@"To Start a new Othello game please choose a game type and press Enter:
-1) one player game 
-2) two players game.");
-                string gameType = Console.ReadLine();
-
-                if (gameType == ((int)eGameType.OnePlayer).ToString())
-                {
-                    return eGameType.OnePlayer;
-                }
-                else if (gameType == ((int)eGameType.TwoPlayers).ToString())
-                {
-                    return eGameType.TwoPlayers;
-                }
-
-                Console.WriteLine("Invalid input! Please try again:");
-            }
         }
     }
 }
