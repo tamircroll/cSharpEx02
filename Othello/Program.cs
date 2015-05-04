@@ -22,11 +22,6 @@
             int boardSize = DataFromConsole.GetBoardSize();
 
             initParams(gameType, boardSize);
-            string numOfPlayersStr = (gameType == eGameType.OnePlayer) ? "One player" : "Two players";
-            Ex02.ConsoleUtils.Screen.Clear();
-            string msg = string.Format("{0} game was chosen, Press Enter to begin", numOfPlayersStr);
-            Console.WriteLine(msg);
-            Console.ReadLine();
             Ex02.ConsoleUtils.Screen.Clear();
             startPlay(gameType);
         }
@@ -37,6 +32,7 @@
             s_Controller = new Controller(s_Board);
             string playerName = DataFromConsole.GetPlayerName("First");
             s_Player1 = new Player(playerName, ePlayers.Player1);
+            
             if (gameType == eGameType.OnePlayer)
             {
                 s_Player2 = new Player("Computer", ePlayers.Player2);
@@ -50,15 +46,17 @@
 
         private static void startPlay(eGameType i_GameType)
         {
-            while (!s_Controller.IsGameOver())
+            bool isGameOver = false, canPlayerOnePlay, canPlayerTwoPlay;
+            while (!isGameOver)
             {
-                string badMsg = "";
-                while (true)
+                string badMsg = string.Empty;
+                canPlayerOnePlay = s_Controller.CanPlayerPlay(s_Player1);
+                while (canPlayerOnePlay)
                 {
                     Ex02.ConsoleUtils.Screen.Clear();
                     View.DrawBoard(s_Board);
                     Console.WriteLine(badMsg);
-                    Console.WriteLine(String.Format("{0}, please write your play and press Enter:", s_Player1.Name));
+                    Console.WriteLine(string.Format("{0}, please write your play and press Enter:", s_Player1.Name));
                     string playedCell = Console.ReadLine();
                     if (playedCell == k_ExitGame)
                     {
@@ -71,19 +69,14 @@
                     }
                 }
 
-                if (s_Controller.IsGameOver())
-                {
-                    s_Controller.ShowScore();
-                    break;
-                }
-
-                badMsg = "";
-                while (true)
+                badMsg = string.Empty;
+                canPlayerTwoPlay = s_Controller.CanPlayerPlay(s_Player2);
+                while (canPlayerTwoPlay)
                 {
                     Ex02.ConsoleUtils.Screen.Clear();
                     View.DrawBoard(s_Board);
                     Console.WriteLine(badMsg);
-                    Console.WriteLine("Player TWO turn, please enter the desired cell:");
+                    Console.WriteLine(string.Format("{0}, please write your play and press Enter:", s_Player2.Name));
                     string playedCell = Console.ReadLine();
                     if (playedCell == k_ExitGame)
                     {
@@ -94,9 +87,13 @@
                     {
                         break;
                     }
+
                     Console.WriteLine(badMsg);
                 }
+
+                isGameOver = !canPlayerOnePlay && !canPlayerTwoPlay;
             }
+
             startNewGame();
         }
 

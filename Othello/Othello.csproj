@@ -36,7 +36,6 @@
     <Compile Include="Controller.cs" />
     <Compile Include="DataFromConsole.cs" />
     <Compile Include="ePlayers.cs" />
-    <Compile Include="Game.cs" />
     <Compile Include="GameBoard.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="View.cs" />

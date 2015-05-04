@@ -4,6 +4,9 @@ namespace Othello
 {
     internal class DataFromConsole
     {
+        public const int k_MinBoardSize = 3;
+        public const int k_MaxBoardSize = 26;
+
         internal static string GetPlayerName(string i_playerType)
         {
             string playerName;
@@ -34,7 +37,7 @@ namespace Othello
                 Console.WriteLine("Please enter the wanted board size and press Enter");
                 boardSizeStr = Console.ReadLine();
                 bool goodInput = int.TryParse(boardSizeStr, out boardSizeInt);
-                if (goodInput && boardSizeInt >= 8 && boardSizeInt < 26)
+                if (goodInput && boardSizeInt >= k_MinBoardSize && boardSizeInt < k_MaxBoardSize)
                 {
                     return boardSizeInt;
                 }

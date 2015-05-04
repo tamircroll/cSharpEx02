@@ -9,7 +9,8 @@
         private readonly string r_Name;
         private readonly ePlayers r_PlayerEnum;
 
-        public string Name {
+        public string Name 
+        {
             get { return r_Name; }
         }
 
@@ -17,7 +18,6 @@
         {
             get { return r_PlayerEnum; }
         }
-
 
         public Player(string i_Name, ePlayers i_PlayerEnum)
         {
