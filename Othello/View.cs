@@ -15,6 +15,7 @@ namespace Othello
 
             Ex02.ConsoleUtils.Screen.Clear();
             char column = 'A';
+            Console.Write(" ");
             for (int i = 0; i < boardSize; i++)
             {
                 Console.Write("   " + (column++));
@@ -49,6 +50,7 @@ namespace Othello
             {
                 Console.Write("=");
             }
+
             Console.WriteLine();
         }
 

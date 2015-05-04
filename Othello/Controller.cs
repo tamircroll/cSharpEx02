@@ -15,81 +15,115 @@
         
         public bool TryPlayMove(Player i_Player, string i_ChosenCell, ref string badMsg)
         {
-            bool canPlay = false;
             int row = -1;
-
             char columnChar = i_ChosenCell.ToLower().ToCharArray()[0];
             string rowStr = i_ChosenCell.Substring(1);
-
-
-
-            if (!inputIsCell(columnChar, rowStr, ref row))
-            {
-                badMsg = string.Format("{0}, The entered word is not a cell in the board!!! Please play again.", i_Player.Name);
-                return false;
-            }
             int column = columnChar - 'a';
-            bool isEatRight = canEatRight(column, row, i_Player);
-            if (isEatRight)
+
+            bool validMove = inputIsCell(columnChar, rowStr, ref row);
+            if (!validMove)
             {
-                int i = 1;
-                while (s_Board.Board[row, column + 1] != i_Player.PlayerEnum && s_Board.Board[row, column + 1] != ePlayers.NoPlayer)
+                badMsg = string.Format("{0}, The entered word is not a cell in the board!!! Please play again.",
+                    i_Player.Name);
+            }
+            else
+            {
+                validMove = false;
+
+                for (int i = -1 ; i <= 1 ; i++)
                 {
-                    s_Board.Board[row, column] = i_Player.PlayerEnum;
+                    for (int j = -1; j <= 1; j++)
+                    {
+                        if (j != 0 || i != 0)
+                        {
+                            if (canEat(column, row, i, j, i_Player))
+                            {
+                                validMove = true;
+                                eatCells(column, row, i, j, i_Player);
+                            }
+                        }
+                    }
                 }
-                return true;
+
+                if (!validMove)
+                {
+                    badMsg = string.Format("You can not play on cell {0}", i_ChosenCell);
+                }
             }
-            badMsg = "NONONONONONONONONONONONONONONONO!!!";
-            return false;
+
+            return validMove;
         }
 
-        private bool canEatRight(int column, int row, Player i_Player)
+        private bool canEat(int i_Row, int i_Column, int i_moveRow, int i_MoveColumn, Player i_Player)
         {
-            int i = 1;
+            int i = 1 ;
+            bool isCanEatRight = false;
 
-            if (s_Board.Board[row, column + 1] != i_Player.PlayerEnum && s_Board.Board[row, column + 1] != ePlayers.NoPlayer)
+            do
             {
-                return false;
-            }
+                i_Row += i_moveRow;
+                i_Column += i_MoveColumn;
 
-            while (s_Board.Board[row, column + 1] != i_Player.PlayerEnum && s_Board.Board[row, column + 1] != ePlayers.NoPlayer)
-            {
+                if (i_Row < 0 || i_Column < 0 || i_Row >= s_Board.Size || i_Column >= s_Board.Size)
+                {
+                    break;
+                }
+
+                if (s_Board.Board[i_Column, i_Row] == i_Player.PlayerEnum)
+                {
+                    isCanEatRight = i > 1;
+                    break;
+                }
+
                 i++;
-            }
-
-            if (s_Board.Board[row, column + i] == i_Player.PlayerEnum)
-            {
-                return true;
-            }
-
-            return false;
+            } while (s_Board.Board[i_Column, i_Row] != i_Player.PlayerEnum &&
+                     s_Board.Board[i_Column, i_Row] != ePlayers.NoPlayer);
+            
+            return isCanEatRight;
         }
 
-        private bool inputIsCell(char i_Column, string i_RowStr , ref int io_row)
+        private void eatCells(int i_Row, int i_Column, int i_moveRow, int i_MoveColumn, Player i_Player)
         {
-            bool canParse;
+            do
+            {
+                s_Board.Board[i_Column, i_Row] = i_Player.PlayerEnum;
 
-            if (i_RowStr.Length > 2 || i_RowStr.Length < 1)
+                i_Row += i_moveRow;
+                i_Column += i_MoveColumn;
+
+                if (s_Board.Board[i_Column, i_Row] == i_Player.PlayerEnum)
+                {
+                    break;
+                }
+
+            } while (s_Board.Board[i_Column, i_Row] != i_Player.PlayerEnum &&
+                     s_Board.Board[i_Column, i_Row] != ePlayers.NoPlayer);
+        }
+
+        private bool inputIsCell(char i_Column, string i_RowStr , ref int o_Row)
+        {
+            bool canParse = int.TryParse(i_RowStr, out o_Row);
+
+            if (!canParse)
             {
-                return false;
+                canParse = false;
             }
-            
-            if (i_Column - 'a' < 0 || i_Column - 'a' >= s_Board.Size)
+            else if (o_Row < 1 || o_Row > s_Board.Size)
             {
-                return false;
+                canParse = false;
             }
-            
-            canParse = int.TryParse(i_RowStr, out io_row);
-            if(! canParse)
+            else if (i_RowStr.Length > 2 || i_RowStr.Length < 1)
             {
-                return false;
+                canParse = false;
             }
-            else if (io_row < 1 || io_row > s_Board.Size)
+            else if (i_Column - 'a' < 0 || i_Column - 'a' >= s_Board.Size)
             {
-                return false;
+                canParse = false;
             }
 
-            return true;
+            o_Row--;
+            
+            return canParse;
         }
 
         public bool IsGameOver()
