@@ -94,9 +94,11 @@
                     }
 
                     i++;
-                } while (s_Board.Board[i_Column, i_Row] != i_Player.PlayerEnum &&
+                } 
+                while (s_Board.Board[i_Column, i_Row] != i_Player.PlayerEnum &&
                          s_Board.Board[i_Column, i_Row] != ePlayers.NoPlayer);
             }
+
             return isCanEatRight;
         }
 

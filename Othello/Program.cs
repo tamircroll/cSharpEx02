@@ -78,6 +78,7 @@
                 
                 isGameOver = (!canPlayerOnePlay && !canPlayerTwoPlay) || exitGame;
             }
+
             if (!exitGame)
             {
                 s_Controller.CalcAndShowScore();

@@ -71,9 +71,7 @@ namespace Othello
 
         internal static void ShowScore(int i_FirstPlayerScore, int i_SecondPlayerScore)
         {
-            Console.WriteLine(string.Format(
-@"           GAME OVER!!!
-First Player: {0}, Second Player: {1}.",i_FirstPlayerScore, i_SecondPlayerScore));
+            Console.WriteLine(string.Format("GAME OVER!!!{2}First Player: {0}, Second Player: {1}.", i_FirstPlayerScore, i_SecondPlayerScore, System.Environment.NewLine));
             Console.ReadLine();
         }
     }
