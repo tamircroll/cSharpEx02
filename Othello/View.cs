@@ -12,9 +12,9 @@ namespace Othello
         {
             int boardSize = i_GameBoard.Size;
             ePlayers[,] board = i_GameBoard.Board;
-
-            Ex02.ConsoleUtils.Screen.Clear();
             char column = 'A';
+            
+            Ex02.ConsoleUtils.Screen.Clear();
             Console.Write(" ");
             for (int i = 0; i < boardSize; i++)
             {
@@ -67,6 +67,14 @@ namespace Othello
             }
 
             throw new Exception("Couldn't find a cell sign");
+        }
+
+        internal static void ShowScore(int i_FirstPlayerScore, int i_SecondPlayerScore)
+        {
+            Console.WriteLine(string.Format(
+@"           GAME OVER!!!
+First Player: {0}, Second Player: {1}.",i_FirstPlayerScore, i_SecondPlayerScore));
+            Console.ReadLine();
         }
     }
 }

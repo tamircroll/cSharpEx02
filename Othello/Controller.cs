@@ -75,26 +75,28 @@
             int i = 1;
             bool isCanEatRight = false;
 
-            do
+            if (s_Board.Board[i_Column, i_Row] == ePlayers.NoPlayer)
             {
-                i_Row += i_moveRow;
-                i_Column += i_MoveColumn;
-
-                if (i_Row < 0 || i_Column < 0 || i_Row >= s_Board.Size || i_Column >= s_Board.Size)
+                do
                 {
-                    break;
-                }
+                    i_Row += i_moveRow;
+                    i_Column += i_MoveColumn;
 
-                if (s_Board.Board[i_Column, i_Row] == i_Player.PlayerEnum)
-                {
-                    isCanEatRight = i > 1;
-                    break;
-                }
+                    if (i_Row < 0 || i_Column < 0 || i_Row >= s_Board.Size || i_Column >= s_Board.Size)
+                    {
+                        break;
+                    }
 
-                i++;
-            } 
-            while (s_Board.Board[i_Column, i_Row] != i_Player.PlayerEnum && s_Board.Board[i_Column, i_Row] != ePlayers.NoPlayer);
-            
+                    if (s_Board.Board[i_Column, i_Row] == i_Player.PlayerEnum)
+                    {
+                        isCanEatRight = i > 1;
+                        break;
+                    }
+
+                    i++;
+                } while (s_Board.Board[i_Column, i_Row] != i_Player.PlayerEnum &&
+                         s_Board.Board[i_Column, i_Row] != ePlayers.NoPlayer);
+            }
             return isCanEatRight;
         }
 
@@ -163,9 +165,27 @@
             return canPlay;
         }
 
-        internal void ShowScore()
+        internal void CalcAndShowScore()
         {
-            throw new NotImplementedException();
+            int firstPlayer = 0, secondPlayer = 0;
+            for (int i = 0; i < s_Board.Size; i++)
+            {
+                for (int j = 0; j < s_Board.Size; j++)
+                {
+                    if (s_Board.Board[i, j] == ePlayers.Player1)
+                    {
+                        firstPlayer++;
+                    }
+                    else if (s_Board.Board[i, j] == ePlayers.Player2)
+                    {
+                        secondPlayer++;
+                    }
+                }
+            }
+
+            Ex02.ConsoleUtils.Screen.Clear();
+            View.DrawBoard(s_Board);
+            View.ShowScore(firstPlayer, secondPlayer);
         }
     }
 }

@@ -35,11 +35,6 @@ namespace Othello
             {
                 return m_Board;
             }
-
-            set
-            {
-                int x = 1;
-            }
         }
     }
 }

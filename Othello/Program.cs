@@ -18,12 +18,17 @@
 
         private static void startNewGame()
         {
-            eGameType gameType = DataFromConsole.ChooseGameType();
-            int boardSize = DataFromConsole.GetBoardSize();
+            bool exitGame = false;
 
-            initParams(gameType, boardSize);
-            Ex02.ConsoleUtils.Screen.Clear();
-            startPlay(gameType);
+            while (!exitGame)
+            {
+                eGameType gameType = DataFromConsole.ChooseGameType();
+                int boardSize = DataFromConsole.GetBoardSize();
+
+                initParams(gameType, boardSize);
+                Ex02.ConsoleUtils.Screen.Clear();
+                exitGame = startPlay(gameType);
+            }
         }
 
         private static void initParams(eGameType gameType, int i_boardSize)
@@ -44,57 +49,67 @@
             }
         }
 
-        private static void startPlay(eGameType i_GameType)
+        private static bool startPlay(eGameType i_GameType)
         {
-            bool isGameOver = false, canPlayerOnePlay, canPlayerTwoPlay;
+            bool isGameOver = false, exitGame = false, canPlayerOnePlay, canPlayerTwoPlay = true;
             while (!isGameOver)
             {
-                string badMsg = string.Empty;
                 canPlayerOnePlay = s_Controller.CanPlayerPlay(s_Player1);
-                while (canPlayerOnePlay)
+                if (canPlayerOnePlay)
                 {
-                    Ex02.ConsoleUtils.Screen.Clear();
-                    View.DrawBoard(s_Board);
-                    Console.WriteLine(badMsg);
-                    Console.WriteLine(string.Format("{0}, please write your play and press Enter:", s_Player1.Name));
-                    string playedCell = Console.ReadLine();
-                    if (playedCell == k_ExitGame)
-                    {
-                        return;
-                    }
-
-                    if (s_Controller.TryPlayMove(s_Player1, playedCell, ref badMsg))
-                    {
-                        break;
-                    }
+                    exitGame = playTurn(s_Player1);
                 }
 
-                badMsg = string.Empty;
+                if (exitGame)
+                {
+                    break;
+                }
+
                 canPlayerTwoPlay = s_Controller.CanPlayerPlay(s_Player2);
-                while (canPlayerTwoPlay)
+                if (canPlayerTwoPlay)
                 {
-                    Ex02.ConsoleUtils.Screen.Clear();
-                    View.DrawBoard(s_Board);
-                    Console.WriteLine(badMsg);
-                    Console.WriteLine(string.Format("{0}, please write your play and press Enter:", s_Player2.Name));
-                    string playedCell = Console.ReadLine();
-                    if (playedCell == k_ExitGame)
-                    {
-                        return;
-                    }
- 
-                    if (s_Controller.TryPlayMove(s_Player2, playedCell, ref badMsg))
-                    {
-                        break;
-                    }
-
-                    Console.WriteLine(badMsg);
+                    exitGame = playTurn(s_Player2);
                 }
 
-                isGameOver = !canPlayerOnePlay && !canPlayerTwoPlay;
+                if (exitGame)
+                {
+                    break;
+                }
+                
+                isGameOver = (!canPlayerOnePlay && !canPlayerTwoPlay) || exitGame;
+            }
+            if (!exitGame)
+            {
+                s_Controller.CalcAndShowScore();
             }
 
-            startNewGame();
+            return exitGame;
+        }
+
+        private static bool playTurn(Player player)
+        {
+            string badMsg = string.Empty;
+            bool exitGame = false;
+
+            while (true)
+            {
+                View.DrawBoard(s_Board);
+                Console.WriteLine(badMsg);
+                Console.WriteLine(string.Format("{0}, please write your play and press Enter:", player.Name));
+                string playedCell = Console.ReadLine();
+                if (playedCell == k_ExitGame)
+                {
+                    exitGame = true;
+                    break;
+                }
+
+                if (s_Controller.TryPlayMove(player, playedCell, ref badMsg))
+                {
+                    break;
+                }
+            }
+
+            return exitGame;
         }
 
         public enum eGameType
