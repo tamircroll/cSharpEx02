@@ -1,10 +1,4 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="eGameType.cs" company="">
-// TODO: Update copyright text.
-// </copyright>
-// -----------------------------------------------------------------------
-
-using System;
+﻿using System;
 
 namespace Othello
 {

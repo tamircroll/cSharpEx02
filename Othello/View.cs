@@ -1,10 +1,6 @@
-﻿using System.Globalization;
-
-namespace Othello
+﻿namespace Othello
 {
     using System;
-    using System.Collections.Generic;
-    using System.Text;
 
     public class View
     {
@@ -54,9 +50,9 @@ namespace Othello
             Console.WriteLine();
         }
 
-        private static string getCellSign(ePlayers ePlayers)
+        private static string getCellSign(ePlayers i_PlayerEnum)
         {
-            switch (ePlayers)
+            switch (i_PlayerEnum)
             {
                 case ePlayers.NoPlayer:
                     return " ";
@@ -69,24 +65,71 @@ namespace Othello
             throw new Exception("Couldn't find a cell sign");
         }
 
-        internal static void ShowScore(Player i_FirstPlayer, Player i_SecondPlayer, Player i_Winner)
+        internal static void ShowScore(Player i_FirstPlayer, Player i_SecondPlayer, GameBoard i_Board)
         {
+            string winnerMsg = @"{0} IS THE WINNER!!!
+
+                                   .''.
+       .''.      .        *''*    :_\/_:     .
+      :_\/_:   _\(/_  .:.*_\/_*   : /\ :  .'.:.'.
+  .''.: /\ :    /)\   ':'* /\ *  : '..'.  -=:o:=-
+ :_\/_:'.:::.  | ' *''*    * '.\'/.'_\(/_ '.':'.'
+ : /\ : :::::  =  *_\/_*     -= o =- /)\    '  *
+  '..'  ':::' === * /\ *     .'/.\'.  ' ._____
+      *        |   *..*         :       |.   |' .----|
+        *      |     _           .--'|  ||   | _|    |
+        *      |  .-'|       __  |   |  |    ||      |
+     .-----.   |  |' |  ||  |  | |   |  |    ||      |
+ ___'       ' / \ |  '-.''.    '-'   '-.'    '`      |____
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+         Press Enter to start a new game";
+
+            string tieMsg = @"YOU BOTH WINNERS!!!
+
+                ,a_a
+               {/ ''\_
+               {\ ,_oo)
+               {/  (_^_____________________
+     .=.      {/ \___)))*)----------;=====;`
+    (.=.`\   {/   /=;  ~~           |     |
+        \ `\{/(   \/\               |     |
+         \  `. `\  ) )              |     |
+          \    // /_/_              |     |
+           '==''---))))             |_____|
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+         Press Enter to start a new game";
+
+            Ex02.ConsoleUtils.Screen.Clear();
+            View.DrawBoard(i_Board);
             Console.WriteLine(string.Format(
-@"   GAME OVER!!!
-{0}: {1}, {2}: {3}.",
+@" _______  _______  _______  _______    _______           _______  _______ 
+(  ____ \(  ___  )(       )(  ____ \  (  ___  )|\     /|(  ____ \(  ____ )
+| (    \/| (   ) || () () || (    \/  | (   ) || )   ( || (    \/| (    )|
+| |      | (___) || || || || (__      | |   | || |   | || (__    | (____)|
+| | ____ |  ___  || |(_)| ||  __)     | |   | |( (   ) )|  __)   |     __)
+| | \_  )| (   ) || |   | || (        | |   | | \ \_/ / | (      | (\ (   
+| (___) || )   ( || )   ( || (____/\  | (___) |  \   /  | (____/\| ) \ \__
+(_______)|/     \||/     \|(_______/  (_______)   \_/   (_______/|/   \__/
+
+{0} have {1} points, {2} have {3} points.",
                     i_FirstPlayer.Name,
                     i_FirstPlayer.m_Score,
                     i_SecondPlayer.Name,
                     i_SecondPlayer.m_Score));
 
-            if (i_Winner != null)
+            if (i_FirstPlayer.m_Score > i_SecondPlayer.m_Score)
             {
-                Console.WriteLine(string.Format("{0} IS THE WINNER!!!", i_Winner.Name));
+                Console.WriteLine(string.Format(winnerMsg, i_FirstPlayer.Name));
+                Console.ReadLine();
+            }
+            else if (i_SecondPlayer.m_Score > i_FirstPlayer.m_Score)
+            {
+                Console.WriteLine(string.Format(winnerMsg, i_SecondPlayer.Name));
                 Console.ReadLine();
             }
             else
             {
-                Console.WriteLine("YOU BOTH WINNERS!!!");
+                Console.WriteLine(tieMsg);
             }
         }
     }
