@@ -9,6 +9,16 @@
         private readonly string r_Name;
         private readonly ePlayers r_PlayerEnum;
 
+        public int m_Score
+        {
+            get; set;
+        }
+
+        public List<string> ValidateMoves
+        {
+            get; set;
+        }
+
         public string Name 
         {
             get { return r_Name; }

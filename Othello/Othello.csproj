@@ -33,8 +33,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="AutoPlay.cs" />
     <Compile Include="Controller.cs" />
-    <Compile Include="DataFromConsole.cs" />
+    <Compile Include="DataFromConsoleHandler.cs" />
     <Compile Include="ePlayers.cs" />
     <Compile Include="GameBoard.cs" />
     <Compile Include="Player.cs" />

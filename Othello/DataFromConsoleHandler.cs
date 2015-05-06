@@ -1,11 +1,12 @@
 ﻿using System;
+using Ex02.ConsoleUtils;
 
 namespace Othello
 {
-    internal class DataFromConsole
+    internal class DataFromConsoleHandler
     {
-        public const int k_MinBoardSize = 3;
-        public const int k_MaxBoardSize = 26;
+        public const string k_BoardSizeSix = "1";
+        public const string k_BoardSizeEight = "2";
 
         internal static string GetPlayerName(string i_playerType)
         {
@@ -29,22 +30,34 @@ namespace Othello
         internal static int GetBoardSize()
         {
             int boardSizeInt;
-            string boardSizeStr;
+            string option;
 
             Ex02.ConsoleUtils.Screen.Clear();
             while (true)
             {
-                Console.WriteLine("Please enter the wanted board size and press Enter");
-                boardSizeStr = Console.ReadLine();
-                bool goodInput = int.TryParse(boardSizeStr, out boardSizeInt);
-                if (goodInput && boardSizeInt >= k_MinBoardSize && boardSizeInt < k_MaxBoardSize)
+                Console.WriteLine(string.Format(
+@"Please choose board size:
+{0}) Board size 6
+{1}) Board size 8",
+                  k_BoardSizeSix, 
+                  k_BoardSizeEight));
+                option = Console.ReadLine();
+                if (option == k_BoardSizeSix)
                 {
-                    return boardSizeInt;
+                    boardSizeInt = 6;
+                    break;
+                }
+                else if (option == k_BoardSizeEight)
+                {
+                    boardSizeInt = 8;
+                    break;
                 }
 
                 Ex02.ConsoleUtils.Screen.Clear();
                 Console.WriteLine("Invalid input! Please try again:");
             }
+
+            return boardSizeInt;
         }
 
         public static Program.eGameType ChooseGameType()
@@ -52,10 +65,12 @@ namespace Othello
             while (true)
             {
                 Ex02.ConsoleUtils.Screen.Clear();
-                Console.WriteLine(
+                Console.WriteLine(string.Format(
 @"To Start a new Othello game please choose a game type and press Enter:
-1) one player game 
-2) two players game.");
+{0}) one player game 
+{1}) two players game.", 
+                       (int)Program.eGameType.OnePlayer, 
+                       (int)Program.eGameType.TwoPlayers));
                 string gameType = Console.ReadLine();
 
                 if (gameType == ((int)Program.eGameType.OnePlayer).ToString())

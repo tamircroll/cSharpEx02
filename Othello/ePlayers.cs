@@ -4,8 +4,11 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
+using System;
+
 namespace Othello
 {
+    [Flags]
     public enum ePlayers
     {
         NoPlayer = 0,

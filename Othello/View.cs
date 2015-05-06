@@ -69,10 +69,25 @@ namespace Othello
             throw new Exception("Couldn't find a cell sign");
         }
 
-        internal static void ShowScore(int i_FirstPlayerScore, int i_SecondPlayerScore)
+        internal static void ShowScore(Player i_FirstPlayer, Player i_SecondPlayer, Player i_Winner)
         {
-            Console.WriteLine(string.Format("GAME OVER!!!{2}First Player: {0}, Second Player: {1}.", i_FirstPlayerScore, i_SecondPlayerScore, System.Environment.NewLine));
-            Console.ReadLine();
+            Console.WriteLine(string.Format(
+@"   GAME OVER!!!
+{0}: {1}, {2}: {3}.",
+                    i_FirstPlayer.Name,
+                    i_FirstPlayer.m_Score,
+                    i_SecondPlayer.Name,
+                    i_SecondPlayer.m_Score));
+
+            if (i_Winner != null)
+            {
+                Console.WriteLine(string.Format("{0} IS THE WINNER!!!", i_Winner.Name));
+                Console.ReadLine();
+            }
+            else
+            {
+                Console.WriteLine("YOU BOTH WINNERS!!!");
+            }
         }
     }
 }

@@ -7,9 +7,9 @@
     public class Program
     {
         private const string k_ExitGame = "Q";
-        private static GameBoard s_Board;
         private static Player s_Player1, s_Player2;
         private static Controller s_Controller;
+        private static GameBoard s_Board;
 
         public static void Main()
         {
@@ -22,8 +22,8 @@
 
             while (!exitGame)
             {
-                eGameType gameType = DataFromConsole.ChooseGameType();
-                int boardSize = DataFromConsole.GetBoardSize();
+                eGameType gameType = DataFromConsoleHandler.ChooseGameType();
+                int boardSize = DataFromConsoleHandler.GetBoardSize();
 
                 initParams(gameType, boardSize);
                 Ex02.ConsoleUtils.Screen.Clear();
@@ -35,7 +35,7 @@
         {
             s_Board = new GameBoard(i_boardSize);
             s_Controller = new Controller(s_Board);
-            string playerName = DataFromConsole.GetPlayerName("First");
+            string playerName = DataFromConsoleHandler.GetPlayerName("First");
             s_Player1 = new Player(playerName, ePlayers.Player1);
             
             if (gameType == eGameType.OnePlayer)
@@ -44,59 +44,84 @@
             }
             else
             {
-                playerName = DataFromConsole.GetPlayerName("Second");
+                playerName = DataFromConsoleHandler.GetPlayerName("Second");
                 s_Player2 = new Player(playerName, ePlayers.Player2);
             }
         }
 
         private static bool startPlay(eGameType i_GameType)
         {
-            bool isGameOver = false, exitGame = false, canPlayerOnePlay, canPlayerTwoPlay = true;
-            while (!isGameOver)
+            bool isGameOver = false, exitGame = false;
+            bool canPlayerTwoPlay = s_Controller.ListAllPossibleMoves(s_Player2);
+            bool canPlayerOnePlay = s_Controller.ListAllPossibleMoves(s_Player1);
+
+            while (true)
             {
-                canPlayerOnePlay = s_Controller.CanPlayerPlay(s_Player1);
                 if (canPlayerOnePlay)
                 {
                     exitGame = playTurn(s_Player1);
                 }
 
-                if (exitGame)
-                {
-                    break;
-                }
-
-                canPlayerTwoPlay = s_Controller.CanPlayerPlay(s_Player2);
-                if (canPlayerTwoPlay)
-                {
-                    exitGame = playTurn(s_Player2);
-                }
-
-                if (exitGame)
+                canPlayerTwoPlay = s_Controller.ListAllPossibleMoves(s_Player2);
+                if((!canPlayerOnePlay && !canPlayerTwoPlay) || exitGame)
                 {
                     break;
                 }
                 
-                isGameOver = (!canPlayerOnePlay && !canPlayerTwoPlay) || exitGame;
+                if (!canPlayerOnePlay)
+                {
+                    noMovesMessage(s_Player1);
+                }
+                
+                if (canPlayerTwoPlay)
+                {
+                    if (i_GameType == eGameType.TwoPlayers)
+                    {
+                        exitGame = playTurn(s_Player2);
+                    }
+                    else if (i_GameType == eGameType.OnePlayer)
+                    {
+                        AutoPlay.Play(s_Player2, s_Player1, s_Board, s_Controller);
+                    }
+                }
+
+                canPlayerOnePlay = s_Controller.ListAllPossibleMoves(s_Player1);
+                if((!canPlayerOnePlay && !canPlayerTwoPlay) || exitGame)
+                {
+                    break;
+                }
+
+                if (!canPlayerTwoPlay)
+                {
+                    noMovesMessage(s_Player2);
+                }
             }
 
             if (!exitGame)
             {
-                s_Controller.CalcAndShowScore();
+                s_Controller.CalcAndShowScore(s_Player1, s_Player2);
             }
 
             return exitGame;
         }
 
+        private static void noMovesMessage(Player i_Player)
+        {
+            Ex02.ConsoleUtils.Screen.Clear();
+            View.DrawBoard(s_Board);
+            Console.WriteLine(string.Format("{0}, You don't have any possible move, Press Enter to pass the turn.", i_Player.Name));
+            Console.ReadLine();
+        }
+
         private static bool playTurn(Player player)
         {
-            string badMsg = string.Empty;
+            string msg = string.Format("{0}, please write your play and press Enter:", player.Name);
             bool exitGame = false;
 
             while (true)
             {
                 View.DrawBoard(s_Board);
-                Console.WriteLine(badMsg);
-                Console.WriteLine(string.Format("{0}, please write your play and press Enter:", player.Name));
+                Console.WriteLine(msg);
                 string playedCell = Console.ReadLine();
                 if (playedCell == k_ExitGame)
                 {
@@ -104,7 +129,7 @@
                     break;
                 }
 
-                if (s_Controller.TryPlayMove(player, playedCell, ref badMsg))
+                if (s_Controller.TryPlayMove(player, playedCell, ref msg))
                 {
                     break;
                 }
@@ -113,6 +138,7 @@
             return exitGame;
         }
 
+        [Flags]
         public enum eGameType
         {
             OnePlayer = 1,
