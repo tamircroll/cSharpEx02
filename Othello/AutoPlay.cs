@@ -1,23 +1,30 @@
 ﻿namespace Othello
 {
     using System;
-    using System.Collections.Generic;
-    using System.Text;
 
     public class AutoPlay
     {
-        internal static void PlayRandom(Player i_Player, Controller i_controller)
+        private const int k_Row = 0;
+        private const int k_Column = 1;
+
+        internal static void PlayRandom(Player i_Player, GameBoard i_Board)
         {
             int rndIndex = new Random().Next(i_Player.ValidateMoves.Count);
             string rndCellStr = i_Player.ValidateMoves[rndIndex];
-            int row = rndCellStr.ToCharArray()[0] - '0';
-            int column = rndCellStr.ToCharArray()[2] - '0';
+            int[] rowAndCol = getRowAndCol(rndCellStr);
 
-            i_controller.executePlayMove(row, column, i_Player);
+            Controller.executePlayMove(rowAndCol[k_Row], rowAndCol[k_Column], i_Player, i_Board);
         }
 
-        public static void PlayRandom2(Player i_Player, Controller i_controller)
+        internal static void PlayCalculatedMove(Player i_Player, Controller i_controller, GameBoard i_Board)
         {
+        }
+
+        private static int[] getRowAndCol(string i_CellStr)
+        {
+            char[] cellCharArr = i_CellStr.ToCharArray();
+
+            return new int[] { cellCharArr[0] - '0', cellCharArr[2] - '0' };
         }
     }
 }

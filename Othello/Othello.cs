@@ -6,7 +6,6 @@
     {
         private const string k_ExitGame = "Q";
         private Player m_Player1, m_Player2;
-        private Controller m_Controller;
         private GameBoard m_Board;
 
         public bool StartNewGame()
@@ -14,7 +13,6 @@
             eGameType gameType = ConsoleHandler.ChooseGameType();
             int boardSize = ConsoleHandler.GetBoardSize();
             m_Board = new GameBoard(boardSize);
-            m_Controller = new Controller(m_Board);
 
             setPlayers(gameType);
             bool keepPlay = !startPlay(gameType);
@@ -40,7 +38,7 @@
         private bool startPlay(eGameType i_GameType)
         {
             bool exitGame = false;
-            bool canPlayerOnePlay = m_Controller.ListAllPossibleMoves(m_Player1);
+            bool canPlayerOnePlay = Controller.ListAllPossibleMoves(m_Player1, m_Board);
 
             while (true)
             {
@@ -49,7 +47,7 @@
                     exitGame = playTurn(m_Player1);
                 }
 
-                bool canPlayerTwoPlay = m_Controller.ListAllPossibleMoves(m_Player2);
+                bool canPlayerTwoPlay = Controller.ListAllPossibleMoves(m_Player2, m_Board);
                 if((!canPlayerOnePlay && !canPlayerTwoPlay) || exitGame)
                 {
                     break;
@@ -68,11 +66,11 @@
                     }
                     else if (i_GameType == eGameType.OnePlayer)
                     {
-                        AutoPlay.PlayRandom(m_Player2, m_Controller);
+                        AutoPlay.PlayRandom(m_Player2, m_Board);
                     }
                 }
 
-                canPlayerOnePlay = m_Controller.ListAllPossibleMoves(m_Player1);
+                canPlayerOnePlay = Controller.ListAllPossibleMoves(m_Player1, m_Board);
                 if((!canPlayerOnePlay && !canPlayerTwoPlay) || exitGame)
                 {
                     break;
@@ -86,7 +84,7 @@
 
             if (!exitGame)
             {
-                m_Controller.CalcScore(m_Player1, m_Player2);
+                Controller.CalcScore(m_Player1, m_Player2, m_Board);
                 View.ShowScore(m_Player1, m_Player2, m_Board);
             }
 
@@ -110,7 +108,7 @@
                     break;
                 }
 
-                if (m_Controller.TryPlayMove(i_Player, playedCellStr, ref msg))
+                if (Controller.TryPlayMove(i_Player, playedCellStr, ref msg, m_Board))
                 {
                     break;
                 }
