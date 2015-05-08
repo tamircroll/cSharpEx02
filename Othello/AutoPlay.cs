@@ -16,17 +16,17 @@
             Controller.ExecutePlayMove(rowAndCol[k_Row], rowAndCol[k_Column], i_Player, i_Board);
         }
 
-        internal static void RecursiveCalculation(Player i_Player, Player i_Rival, GameBoard i_Board, int count)
+        internal static void RecursiveCalculation(Player i_Player, Player i_Rival, GameBoard i_Board)
         {
             string[] bestScore = null;
 
-            foreach (var move in i_Player.ValidateMoves)
+            foreach (string move in i_Player.ValidateMoves)
             {
-                string[] curScore = RecursiveCalculation(i_Player.ClonePlayer(), i_Rival.ClonePlayer(), move, i_Board.CloneBoard(), count);
+                string[] curScore = RecursiveCalculation(i_Player.ClonePlayer(), i_Rival.ClonePlayer(), move, i_Board.CloneBoard());
 
                 if (bestScore == null)
                 {
-                    bestScore = curScore;
+                    bestScore = recursiveHelper(i_Player, i_Rival, i_Board.CloneBoard()); ;
                 }
 
                 bestScore = getBetterScore(bestScore, curScore);
@@ -36,73 +36,64 @@
             Controller.ExecutePlayMove(rowAndCol[0], rowAndCol[1], i_Player, i_Board);
         }
 
-        internal static string[] RecursiveCalculation(Player i_Player, Player i_Rival, string i_Move, GameBoard i_Board, int count)
+        internal static string[] RecursiveCalculation(Player i_Player, Player i_Rival, string i_Move, GameBoard i_Board)
         {
             string[] bestScore = null;
-
-            Controller.ListAllPossibleMoves(i_Player, i_Board);
-            if (count == 0 || i_Player.ValidateMoves.Count == 0)
-            {
-                Controller.CalcScore(i_Rival, i_Player, i_Board);
-                return new string[] { i_Move, i_Player.m_Score.ToString() };
-            }
-
-            bestScore = recursiveHelper(i_Player, i_Rival, i_Board, count);
+            Controller.TryPlayMove(i_Player, i_Move, i_Board); 
+            bestScore = recursiveHelper(i_Player, i_Rival, i_Board);
 
             return bestScore;
         }
 
-        private static string[] recursiveHelper(Player i_Player, Player i_Rival, GameBoard i_Board, int count)
+        private static string[] recursiveHelper(Player i_Player, Player i_Rival, GameBoard i_Board)
         {
-            GameBoard board = i_Board.CloneBoard();
-            Player rivalBestMove = i_Rival.ClonePlayer();
-            string[] bestScore = null;
-            Controller.CalcScore(rivalBestMove, i_Player, board);
+            string[] toRetuen = null;
             
             foreach (string rivalMove in i_Rival.ValidateMoves)
             {
+                Player playerClone = i_Player.ClonePlayer();
                 Player rivalClone = i_Rival.ClonePlayer();
                 GameBoard boardClone = i_Board.CloneBoard();
 
                 Controller.TryPlayMove(rivalClone, rivalMove, boardClone);
+                Controller.ListAllPossibleMoves(playerClone, boardClone);
                 Controller.ListAllPossibleMoves(rivalClone, boardClone);
                 Controller.CalcScore(rivalClone, i_Player, boardClone);
 
-                if (rivalClone.m_Score > rivalBestMove.m_Score)
+                toRetuen = recursiveHelper2(i_Player.ClonePlayer(), rivalClone, boardClone.CloneBoard());
+                if (toRetuen == null)
                 {
-                    rivalBestMove = rivalClone;
+                    toRetuen = recursiveHelper2(playerClone,rivalClone, boardClone);
                 }
             }
 
-            bestScore = recursiveHelper2(count, i_Player.ClonePlayer(), rivalBestMove.ClonePlayer(), board);
-            if (bestScore == null)
+            if (toRetuen == null)
             {
-                bestScore = recursiveHelper2(count, i_Player, i_Rival, i_Board);
+                toRetuen = recursiveHelper2(i_Player, i_Rival, i_Board);
             }
 
-            return bestScore;
+            return toRetuen;
         }
 
-        private static string[] recursiveHelper2(int count, Player playerClone, Player rivalClone, GameBoard boardClone)
+        private static string[] recursiveHelper2(Player i_Player, Player i_Rival, GameBoard i_Board)
         {
             string[] bestScore = null;
 
-            foreach (string playerlMove in playerClone.ValidateMoves)
+            foreach (string playerlMove in i_Player.ValidateMoves)
             {
-                Player playerClone2 = playerClone.ClonePlayer();
-                Player rivalClone2 = rivalClone.ClonePlayer();
-                GameBoard boardClone2 = boardClone.CloneBoard();
+                Player playerClone = i_Player.ClonePlayer();
+                GameBoard boardClone2 = i_Board.CloneBoard();
 
-                Controller.TryPlayMove(playerClone2, playerlMove, boardClone2);
-                Controller.ListAllPossibleMoves(playerClone2, boardClone2);
-                Controller.ListAllPossibleMoves(rivalClone2, boardClone2);
-
-                string[] curScore = RecursiveCalculation(playerClone2.ClonePlayer(), rivalClone2.ClonePlayer(), playerlMove, boardClone2.CloneBoard(), count - 1);
+                Controller.TryPlayMove(playerClone, playerlMove, boardClone2);
+                Controller.ListAllPossibleMoves(playerClone, boardClone2);
+                string[] curScore = {playerlMove, playerClone.m_Score.ToString()};
 
                 if (bestScore == null)
                 {
                     bestScore = curScore;
                 }
+
+                Controller.CalcScore(i_Rival, playerClone, i_Board);
 
                 bestScore = getBetterScore(bestScore, curScore);
             }
@@ -118,6 +109,15 @@
             int.TryParse(i_CurScore[1], out curScore);
 
             return (bestScore > curScore) ? i_BestScore : i_CurScore;
+        }
+
+        private static string[] getWorstScore(string[] i_BestScore, string[] i_CurScore)
+        {
+            int bestScore, curScore;
+            int.TryParse(i_BestScore[1], out bestScore);
+            int.TryParse(i_CurScore[1], out curScore);
+
+            return (bestScore < curScore) ? i_BestScore : i_CurScore;
         }
 
         private static int[] getRowAndCol(string i_CellStr)

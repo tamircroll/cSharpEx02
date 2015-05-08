@@ -19,7 +19,7 @@ namespace Othello
                 }
 
                 Ex02.ConsoleUtils.Screen.Clear();
-                Console.WriteLine("Invalid input!");
+                Console.WriteLine("Player name can't be an empty input!");
             }
 
             return playerName;
@@ -54,7 +54,7 @@ namespace Othello
                 }
 
                 Ex02.ConsoleUtils.Screen.Clear();
-                Console.WriteLine("Do not enter empty input!");
+                Console.WriteLine("Inavlid input!");
             }
 
             return boardSizeInt;
