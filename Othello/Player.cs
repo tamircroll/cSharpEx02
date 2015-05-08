@@ -25,12 +25,31 @@
 
         public string Name 
         {
-            get { return r_Name; }
+            get
+            {
+                return r_Name;
+            }
         }
 
         public ePlayers PlayerEnum
         {
-            get { return r_PlayerEnum; }
+            get
+            {
+                return r_PlayerEnum;
+            }
+        }
+
+        public Player ClonePlayer()
+        {
+            Player cloned = new Player(Name, PlayerEnum);
+            cloned.ValidateMoves = new List<string>();
+
+            foreach (string move in ValidateMoves)
+            {
+                cloned.ValidateMoves.Add(move);
+            }
+
+            return cloned;
         }
     }
 }

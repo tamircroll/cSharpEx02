@@ -31,5 +31,20 @@
                 return m_Board;
             }
         }
+
+        public GameBoard CloneBoard()
+        {
+            GameBoard cloned = new GameBoard(Size);
+
+            for (int i = 0; i < Size; i++)
+            {
+                for (int j = 0; j < Size; j++)
+                {
+                    cloned.Board[i, j] = Board[i, j];
+                }
+            }
+
+            return cloned;
+        }
     }
 }
