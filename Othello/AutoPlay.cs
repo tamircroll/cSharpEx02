@@ -16,17 +16,19 @@
             Controller.ExecutePlayMove(rowAndCol[k_Row], rowAndCol[k_Column], i_Player, i_Board);
         }
 
-        internal static void RecursiveCalculation(Player i_Player, Player i_Rival, GameBoard i_Board)
+        internal static void SmartPlay(Player i_Player, Player i_Rival, GameBoard i_Board)
         {
             string[] bestScore = null;
 
             foreach (string move in i_Player.ValidateMoves)
             {
-                string[] curScore = RecursiveCalculation(i_Player.ClonePlayer(), i_Rival.ClonePlayer(), move, i_Board.CloneBoard());
+                GameBoard clonedBoard = i_Board.CloneBoard();
+                Controller.TryPlayMove(i_Player, move, clonedBoard);
 
+                string[] curScore = smartPlayHelper(i_Player.ClonePlayer(), i_Rival.ClonePlayer(), clonedBoard);
                 if (bestScore == null)
                 {
-                    bestScore = recursiveHelper(i_Player, i_Rival, i_Board.CloneBoard()); ;
+                    bestScore = curScore;
                 }
 
                 bestScore = getBetterScore(bestScore, curScore);
@@ -36,16 +38,7 @@
             Controller.ExecutePlayMove(rowAndCol[0], rowAndCol[1], i_Player, i_Board);
         }
 
-        internal static string[] RecursiveCalculation(Player i_Player, Player i_Rival, string i_Move, GameBoard i_Board)
-        {
-            string[] bestScore = null;
-            Controller.TryPlayMove(i_Player, i_Move, i_Board); 
-            bestScore = recursiveHelper(i_Player, i_Rival, i_Board);
-
-            return bestScore;
-        }
-
-        private static string[] recursiveHelper(Player i_Player, Player i_Rival, GameBoard i_Board)
+        private static string[] smartPlayHelper(Player i_Player, Player i_Rival, GameBoard i_Board)
         {
             string[] toRetuen = null;
             
@@ -57,43 +50,43 @@
 
                 Controller.TryPlayMove(rivalClone, rivalMove, boardClone);
                 Controller.ListAllPossibleMoves(playerClone, boardClone);
-                Controller.ListAllPossibleMoves(rivalClone, boardClone);
-                Controller.CalcScore(rivalClone, i_Player, boardClone);
 
-                toRetuen = recursiveHelper2(i_Player.ClonePlayer(), rivalClone, boardClone.CloneBoard());
+                string[] curScore = smartPlayHelper2(i_Player.ClonePlayer(), rivalClone, boardClone.CloneBoard());
                 if (toRetuen == null)
                 {
-                    toRetuen = recursiveHelper2(playerClone,rivalClone, boardClone);
+                    toRetuen = curScore;
                 }
+
+                toRetuen = getWorstScore(toRetuen, curScore);
             }
 
             if (toRetuen == null)
             {
-                toRetuen = recursiveHelper2(i_Player, i_Rival, i_Board);
+                toRetuen = smartPlayHelper2(i_Player.ClonePlayer(), i_Rival.ClonePlayer(), i_Board.CloneBoard());
             }
 
             return toRetuen;
         }
 
-        private static string[] recursiveHelper2(Player i_Player, Player i_Rival, GameBoard i_Board)
+        private static string[] smartPlayHelper2(Player i_Player, Player i_Rival, GameBoard i_Board)
         {
             string[] bestScore = null;
 
             foreach (string playerlMove in i_Player.ValidateMoves)
             {
                 Player playerClone = i_Player.ClonePlayer();
-                GameBoard boardClone2 = i_Board.CloneBoard();
+                GameBoard boardClone = i_Board.CloneBoard();
 
-                Controller.TryPlayMove(playerClone, playerlMove, boardClone2);
-                Controller.ListAllPossibleMoves(playerClone, boardClone2);
-                string[] curScore = {playerlMove, playerClone.m_Score.ToString()};
+                Controller.TryPlayMove(playerClone, playerlMove, boardClone);
+                Controller.ListAllPossibleMoves(playerClone, boardClone);
+                string[] curScore = { playerlMove, (playerClone.m_Score + playerClone.ValidateMoves.Count).ToString() };
 
                 if (bestScore == null)
                 {
                     bestScore = curScore;
                 }
 
-                Controller.CalcScore(i_Rival, playerClone, i_Board);
+                Controller.CalcScore(i_Rival, playerClone, boardClone);
 
                 bestScore = getBetterScore(bestScore, curScore);
             }

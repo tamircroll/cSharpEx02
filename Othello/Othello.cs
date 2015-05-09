@@ -69,7 +69,7 @@
                     {
                         View.DrawBoard(m_Board);
                         Console.WriteLine("Computer is Playing, Please wait for your turn.");
-                        AutoPlay.RecursiveCalculation(m_Player2, m_Player1, m_Board);
+                        AutoPlay.SmartPlay(m_Player2, m_Player1, m_Board);
                     }
                 }
 
