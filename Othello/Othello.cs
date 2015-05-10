@@ -5,6 +5,7 @@
     public class Othello
     {
         private const string k_ExitGame = "Q";
+        private const int k_RecDepth = 1;
         private Player m_Player1, m_Player2;
         private GameBoard m_Board;
 
@@ -44,7 +45,8 @@
             {
                 if (canPlayerOnePlay)
                 {
-                    exitGame = playTurn(m_Player1);
+                    AutoPlay.PlayRandom(m_Player1, m_Board);
+                    //exitGame = playTurn(m_Player1);
                 }
 
                 bool canPlayerTwoPlay = Controller.ListAllPossibleMoves(m_Player2, m_Board);
@@ -68,7 +70,7 @@
                     {
                         View.DrawBoard(m_Board);
                         Console.WriteLine("Computer is Playing, Please wait for your turn.");
-                        AutoPlay.SmartPlay(m_Player2, m_Player1, m_Board);
+                        AutoPlay.SmartPlay(m_Player2, m_Player1, m_Board, k_RecDepth);
                     }
                 }
 

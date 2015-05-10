@@ -16,16 +16,16 @@
             Controller.ExecutePlayMove(rowAndCol[k_Row], rowAndCol[k_Column], i_Player, i_Board);
         }
 
-        internal static void SmartPlay(Player i_Player, Player i_Rival, GameBoard i_Board)
+        internal static void SmartPlay(Player i_AutoPlayer, Player i_Rival, GameBoard i_Board, int iRecDepth)
         {
             string[] bestScore = null;
 
-            foreach (string move in i_Player.ValidateMoves)
+            foreach (string move in i_AutoPlayer.ValidateMoves)
             {
                 GameBoard clonedBoard = i_Board.CloneBoard();
-                Controller.TryPlayMove(i_Player, move, clonedBoard);
+                Controller.TryPlayMove(i_AutoPlayer, move, clonedBoard);
 
-                string[] curScore = calcMoveMinMax(i_Player.ClonePlayer(), i_Rival.ClonePlayer(), clonedBoard);
+                string[] curScore = calcMoveMinMax(i_AutoPlayer.ClonePlayer(), i_Rival.ClonePlayer(), clonedBoard, iRecDepth);
                 if (bestScore == null)
                 {
                     bestScore = curScore;
@@ -35,23 +35,23 @@
             }
 
             int[] rowAndCol = getRowAndCol(bestScore[0]);
-            Controller.ExecutePlayMove(rowAndCol[0], rowAndCol[1], i_Player, i_Board);
+            Controller.ExecutePlayMove(rowAndCol[0], rowAndCol[1], i_AutoPlayer, i_Board);
         }
 
-        private static string[] calcMoveMinMax(Player i_Player, Player i_Rival, GameBoard i_Board)
+        private static string[] calcMoveMinMax(Player i_AutoPlayer, Player i_Rival, GameBoard i_Board, int iRecDepth)
         {
             string[] toRetuen = null;
             
             foreach (string rivalMove in i_Rival.ValidateMoves)
             {
-                Player playerClone = i_Player.ClonePlayer();
+                Player playerClone = i_AutoPlayer.ClonePlayer();
                 Player rivalClone = i_Rival.ClonePlayer();
                 GameBoard boardClone = i_Board.CloneBoard();
 
                 Controller.TryPlayMove(rivalClone, rivalMove, boardClone);
                 Controller.ListAllPossibleMoves(playerClone, boardClone);
 
-                string[] curScore = calcMoveHelper(i_Player.ClonePlayer(), rivalClone, boardClone.CloneBoard());
+                string[] curScore = calcMoveHelper(i_AutoPlayer.ClonePlayer(), rivalClone, boardClone.CloneBoard(), iRecDepth - 1);
                 if (toRetuen == null)
                 {
                     toRetuen = curScore;
@@ -62,19 +62,19 @@
 
             if (toRetuen == null)
             {
-                toRetuen = calcMoveHelper(i_Player.ClonePlayer(), i_Rival.ClonePlayer(), i_Board.CloneBoard());
+                toRetuen = calcMoveHelper(i_AutoPlayer.ClonePlayer(), i_Rival.ClonePlayer(), i_Board.CloneBoard(), iRecDepth - 1);
             }
 
             return toRetuen;
         }
 
-        private static string[] calcMoveHelper(Player i_Player, Player i_Rival, GameBoard i_Board)
+        private static string[] calcMoveHelper(Player i_AutoPlayer, Player i_Rival, GameBoard i_Board, int iRecDepth)
         {
             string[] bestScore = null;
 
-            foreach (string playerlMove in i_Player.ValidateMoves)
+            foreach (string playerlMove in i_AutoPlayer.ValidateMoves)
             {
-                Player playerClone = i_Player.ClonePlayer();
+                Player playerClone = i_AutoPlayer.ClonePlayer();
                 GameBoard boardClone = i_Board.CloneBoard();
 
                 Controller.TryPlayMove(playerClone, playerlMove, boardClone);
@@ -88,7 +88,9 @@
 
                 Controller.UpdatePlayersScore(i_Rival, playerClone, boardClone);
 
-                bestScore = getBetterScore(bestScore, curScore);
+                bestScore = (iRecDepth == 0)
+                    ? getBetterScore(bestScore, curScore)
+                    : calcMoveMinMax(playerClone.ClonePlayer(), i_Rival.ClonePlayer(), boardClone.CloneBoard(), iRecDepth);
             }
 
             return bestScore;
@@ -115,9 +117,12 @@
 
         private static int[] getRowAndCol(string i_CellStr)
         {
-            char[] cellCharArr = i_CellStr.ToCharArray();
+            int row, col;
+            string[] cellsStr = i_CellStr.Split(',');
+            int.TryParse(cellsStr[0], out row);
+            int.TryParse(cellsStr[1], out col);
 
-            return new int[] { cellCharArr[0] - '0', cellCharArr[2] - '0' };
+            return new[] { row, col };
         }
     }
 }
