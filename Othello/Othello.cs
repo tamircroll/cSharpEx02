@@ -44,8 +44,7 @@
             {
                 if (canPlayerOnePlay)
                 {
-                    AutoPlay.PlayRandom(m_Player1, m_Board);
-                    //exitGame = playTurn(m_Player1);
+                    exitGame = playTurn(m_Player1);
                 }
 
                 bool canPlayerTwoPlay = Controller.ListAllPossibleMoves(m_Player2, m_Board);
@@ -87,7 +86,7 @@
 
             if (!exitGame)
             {
-                Controller.CalcScore(m_Player1, m_Player2, m_Board);
+                Controller.UpdatePlayersScore(m_Player1, m_Player2, m_Board);
                 View.ShowScore(m_Player1, m_Player2, m_Board);
             }
 

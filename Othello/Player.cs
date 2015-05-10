@@ -6,16 +6,19 @@
     {
         private readonly string r_Name;
         private readonly ePlayers r_PlayerEnum;
+        private int m_Score;
 
         public Player(string i_Name, ePlayers i_PlayerEnum)
         {
             r_Name = i_Name;
             r_PlayerEnum = i_PlayerEnum;
+            m_Score = 0;
         }
 
-        public int m_Score
+        public int Score
         {
-            get; set;
+            get { return m_Score; }
+            set { m_Score = value; }
         }
 
         public List<string> ValidateMoves
@@ -25,18 +28,12 @@
 
         public string Name 
         {
-            get
-            {
-                return r_Name;
-            }
+            get { return r_Name; }
         }
 
         public ePlayers PlayerEnum
         {
-            get
-            {
-                return r_PlayerEnum;
-            }
+            get { return r_PlayerEnum; }
         }
 
         public Player ClonePlayer()

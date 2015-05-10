@@ -16,20 +16,20 @@
             m_Board[(i_Size / 2) - 1, i_Size / 2] = ePlayers.Player2;
         }
 
+        public ePlayers this[int i_X, int i_Y]
+        {
+            get { return m_Board[i_X, i_Y]; }
+            set { m_Board[i_X, i_Y] = value; }
+        }
+
         public int Size
         {
-            get
-            {
-                return r_Size;
-            }
+            get { return r_Size; }
         }
 
         public ePlayers[,] Board
         {
-            get
-            {
-                return m_Board;
-            }
+            get { return m_Board; }
         }
 
         public GameBoard CloneBoard()
@@ -40,7 +40,7 @@
             {
                 for (int j = 0; j < Size; j++)
                 {
-                    cloned.Board[i, j] = Board[i, j];
+                    cloned[i, j] = this[i, j];
                 }
             }
 

@@ -60,19 +60,18 @@
                 }
             }
 
-            i_Board.Board[i_Row, i_Column] = i_Player.PlayerEnum;
+            i_Board[i_Row, i_Column] = i_Player.PlayerEnum;
         }
 
         public static bool ListAllPossibleMoves(Player i_Player, GameBoard i_Board)
         {
-            bool validMove;
             List<string> validateMoves = new List<string>();
 
             for (int row = 0; row < i_Board.Size; row++)
             {
                 for (int column = 0; column < i_Board.Size; column++)
                 {
-                    validMove = IsValidMove(row, column, i_Player, i_Board);
+                    bool validMove = IsValidMove(row, column, i_Player, i_Board);
                     if(validMove)
                     {
                         validateMoves.Add(string.Format("{0},{1}", row, column));
@@ -85,22 +84,22 @@
             return validateMoves.Count != 0;
         }
 
-        public static void CalcScore(Player i_Player1, Player i_Player2, GameBoard i_Board)
+        public static void UpdatePlayersScore(Player i_Player1, Player i_Player2, GameBoard i_Board)
         {
-            i_Player1.m_Score = 0;
-            i_Player2.m_Score = 0;
+            i_Player1.Score = 0;
+            i_Player2.Score = 0;
 
             for (int row = 0; row < i_Board.Size; row++)
             {
                 for (int column = 0; column < i_Board.Size; column++)
                 {
-                    if (i_Board.Board[row, column] == ePlayers.Player1)
+                    if (i_Board[row, column] == ePlayers.Player1)
                     {
-                        i_Player1.m_Score++;
+                        i_Player1.Score++;
                     }
-                    else if (i_Board.Board[row, column] == ePlayers.Player2)
+                    else if (i_Board[row, column] == ePlayers.Player2)
                     {
-                        i_Player2.m_Score++;
+                        i_Player2.Score++;
                     }
                 }
             }
@@ -112,9 +111,9 @@
             {
                 i_Row += i_moveRow;
                 i_Column += i_MoveColumn;
-                i_Board.Board[i_Row, i_Column] = i_Player.PlayerEnum;
+                i_Board[i_Row, i_Column] = i_Player.PlayerEnum;
             }
-            while (i_Board.Board[i_Row + i_moveRow, i_Column + i_MoveColumn] != i_Player.PlayerEnum);
+            while (i_Board[i_Row + i_moveRow, i_Column + i_MoveColumn] != i_Player.PlayerEnum);
         }
 
         private static bool canEat(int i_Row, int i_Column, int i_RowDirection, int i_ColumnDirection, Player i_Player, GameBoard i_Board)
@@ -122,7 +121,7 @@
             int numOfPiecesToEat = 0;
             bool canEat = false;
 
-            if (i_Board.Board[i_Row, i_Column] == ePlayers.NoPlayer)
+            if (i_Board[i_Row, i_Column] == ePlayers.NoPlayer)
             {
                 do
                 {
@@ -134,7 +133,7 @@
                         break;
                     }
 
-                    if (i_Board.Board[i_Row, i_Column] == i_Player.PlayerEnum)
+                    if (i_Board[i_Row, i_Column] == i_Player.PlayerEnum)
                     {
                         canEat = numOfPiecesToEat > 0;
                         break;
@@ -142,7 +141,7 @@
 
                     numOfPiecesToEat++;
                 }
-                while (i_Board.Board[i_Row, i_Column] != ePlayers.NoPlayer);
+                while (i_Board[i_Row, i_Column] != ePlayers.NoPlayer);
             }
 
             return canEat;

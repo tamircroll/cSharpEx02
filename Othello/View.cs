@@ -113,16 +113,16 @@
 
 {0} have {1} points, {2} have {3} points.",
                     i_FirstPlayer.Name,
-                    i_FirstPlayer.m_Score,
+                    i_FirstPlayer.Score,
                     i_SecondPlayer.Name,
-                    i_SecondPlayer.m_Score));
+                    i_SecondPlayer.Score));
 
-            if (i_FirstPlayer.m_Score > i_SecondPlayer.m_Score)
+            if (i_FirstPlayer.Score > i_SecondPlayer.Score)
             {
                 Console.WriteLine(string.Format(winnerMsg, i_FirstPlayer.Name));
                 Console.ReadLine();
             }
-            else if (i_SecondPlayer.m_Score > i_FirstPlayer.m_Score)
+            else if (i_SecondPlayer.Score > i_FirstPlayer.Score)
             {
                 Console.WriteLine(string.Format(winnerMsg, i_SecondPlayer.Name));
                 Console.ReadLine();
