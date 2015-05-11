@@ -9,8 +9,8 @@
 
         internal static void PlayRandom(Player i_Player, GameBoard i_Board)
         {
-            int rndIndex = new Random().Next(i_Player.ValidateMoves.Count);
-            string rndCellStr = i_Player.ValidateMoves[rndIndex];
+            int rndIndex = new Random().Next(i_Player.GetValidateMoves(i_Board).Count);
+            string rndCellStr = i_Player.GetValidateMoves(i_Board)[rndIndex];
             int[] rowAndCol = getRowAndCol(rndCellStr); 
 
             Controller.ExecutePlayMove(rowAndCol[k_Row], rowAndCol[k_Column], i_Player, i_Board);
@@ -20,12 +20,12 @@
         {
             string[] bestScore = null;
 
-            foreach (string move in i_AutoPlayer.ValidateMoves)
+            foreach (string move in i_AutoPlayer.GetValidateMoves(i_Board))
             {
                 GameBoard clonedBoard = i_Board.CloneBoard();
                 Controller.TryPlayMove(i_AutoPlayer, move, clonedBoard);
 
-                string[] curScore = calcMoveMinMax(i_AutoPlayer.ClonePlayer(), i_Rival.ClonePlayer(), clonedBoard, iRecDepth);
+                string[] curScore = calcMoveMinMax(i_AutoPlayer, i_Rival, clonedBoard, iRecDepth);
                 if (bestScore == null)
                 {
                     bestScore = curScore;
@@ -42,16 +42,15 @@
         {
             string[] toRetuen = null;
             
-            foreach (string rivalMove in i_Rival.ValidateMoves)
+            foreach (string rivalMove in i_Rival.GetValidateMoves(i_Board))
             {
-                Player playerClone = i_AutoPlayer.ClonePlayer();
-                Player rivalClone = i_Rival.ClonePlayer();
+                Player playerClone = i_AutoPlayer;
+                Player rivalClone = i_Rival;
                 GameBoard boardClone = i_Board.CloneBoard();
 
                 Controller.TryPlayMove(rivalClone, rivalMove, boardClone);
-                Controller.ListAllPossibleMoves(playerClone, boardClone);
 
-                string[] curScore = calcMoveHelper(i_AutoPlayer.ClonePlayer(), rivalClone, boardClone.CloneBoard(), iRecDepth - 1);
+                string[] curScore = calcMoveHelper(i_AutoPlayer, rivalClone, boardClone.CloneBoard(), iRecDepth - 1);
                 if (toRetuen == null)
                 {
                     toRetuen = curScore;
@@ -62,7 +61,7 @@
 
             if (toRetuen == null)
             {
-                toRetuen = calcMoveHelper(i_AutoPlayer.ClonePlayer(), i_Rival.ClonePlayer(), i_Board.CloneBoard(), iRecDepth - 1);
+                toRetuen = calcMoveHelper(i_AutoPlayer, i_Rival, i_Board.CloneBoard(), iRecDepth - 1);
             }
 
             return toRetuen;
@@ -72,25 +71,26 @@
         {
             string[] bestScore = null;
 
-            foreach (string playerlMove in i_AutoPlayer.ValidateMoves)
+            foreach (string playerlMove in i_AutoPlayer.GetValidateMoves(i_Board))
             {
-                Player playerClone = i_AutoPlayer.ClonePlayer();
+                Player player = i_AutoPlayer;
                 GameBoard boardClone = i_Board.CloneBoard();
 
-                Controller.TryPlayMove(playerClone, playerlMove, boardClone);
-                Controller.ListAllPossibleMoves(playerClone, boardClone);
-                string[] curScore = { playerlMove, (playerClone.Score + playerClone.ValidateMoves.Count).ToString() };
+                Controller.TryPlayMove(player, playerlMove, boardClone);
+                string[] curScore =
+                {
+                    playerlMove,
+                    (player.Score(boardClone) + player.GetValidateMoves(boardClone).Count).ToString()
+                };
 
                 if (bestScore == null)
                 {
                     bestScore = curScore;
                 }
 
-                Controller.UpdatePlayersScore(i_Rival, playerClone, boardClone);
-
                 bestScore = (iRecDepth == 0)
                     ? getBetterScore(bestScore, curScore)
-                    : calcMoveMinMax(playerClone.ClonePlayer(), i_Rival.ClonePlayer(), boardClone.CloneBoard(), iRecDepth);
+                    : calcMoveMinMax(player, i_Rival, boardClone.CloneBoard(), iRecDepth);
             }
 
             return bestScore;

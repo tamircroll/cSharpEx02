@@ -2,8 +2,7 @@
 {
     using System;
 
-    [Flags]
-    public enum eGameType
+    public enum eGameType : byte
     {
         OnePlayer = 1,
         TwoPlayers = 2

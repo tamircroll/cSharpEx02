@@ -24,15 +24,15 @@
 
                 if (!validMove)
                 {
-                    o_Msg = string.Format("{0}, The entered word is not a cell in the board!!! Please play again.", i_Player.Name);
+                    o_Msg = string.Format("{0}, This input does not represent a cell in the board!!!{1}Please play again.", i_Player.Name, System.Environment.NewLine);
                 }
                 else
                 {
-                    validMove = isMoveInValidMovesList(row, column, i_Player);
+                    validMove = isMoveInValidMovesList(row, column, i_Player, i_Board);
 
                     if (!validMove)
                     {
-                        o_Msg = string.Format("{0}, You can not choose on cell {1}, Please try again.", i_Player.Name, i_ChosenCell);
+                        o_Msg = string.Format("{0}, You can not choose cell {1}, Please try again.", i_Player.Name, i_ChosenCell);
                     }
                     else
                     {
@@ -63,7 +63,7 @@
             i_Board[i_Row, i_Column] = i_Player.PlayerEnum;
         }
 
-        public static bool ListAllPossibleMoves(Player i_Player, GameBoard i_Board)
+        public static List<string> ListAllPossibleMoves(Player i_Player, GameBoard i_Board)
         {
             List<string> validateMoves = new List<string>();
 
@@ -79,30 +79,7 @@
                 }
             }
 
-            i_Player.ValidateMoves = validateMoves;
-
-            return validateMoves.Count != 0;
-        }
-
-        public static void UpdatePlayersScore(Player i_Player1, Player i_Player2, GameBoard i_Board)
-        {
-            i_Player1.Score = 0;
-            i_Player2.Score = 0;
-
-            for (int row = 0; row < i_Board.Size; row++)
-            {
-                for (int column = 0; column < i_Board.Size; column++)
-                {
-                    if (i_Board[row, column] == ePlayers.Player1)
-                    {
-                        i_Player1.Score++;
-                    }
-                    else if (i_Board[row, column] == ePlayers.Player2)
-                    {
-                        i_Player2.Score++;
-                    }
-                }
-            }
+            return validateMoves;
         }
 
         private static void eatPiecesInDirection(int i_Row, int i_Column, int i_moveRow, int i_MoveColumn, Player i_Player, GameBoard i_Board)
@@ -195,9 +172,9 @@
             return canParse;
         }
 
-        private static bool isMoveInValidMovesList(int i_Row, int i_Column, Player i_Player)
+        private static bool isMoveInValidMovesList(int i_Row, int i_Column, Player i_Player, GameBoard i_Board)
         {
-            return i_Player.ValidateMoves.Contains(string.Format("{0},{1}", i_Row, i_Column));
+            return i_Player.GetValidateMoves(i_Board).Contains(string.Format("{0},{1}", i_Row, i_Column));
         }
     }
 }

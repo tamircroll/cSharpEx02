@@ -5,7 +5,7 @@
     public class Othello
     {
         private const string k_ExitGame = "Q";
-        private const int k_RecDepth = 1;
+        private const int k_RecDepth = 3;
         private Player m_Player1, m_Player2;
         private GameBoard m_Board;
 
@@ -16,40 +16,25 @@
             m_Board = new GameBoard(boardSize);
 
             setPlayers(gameType);
-            bool keepPlay = !startPlay(gameType);
+            bool keepPlay = !startPlay(gameType, m_Board);
 
             return keepPlay;
         }
 
-        private void setPlayers(eGameType gameType)
-        {
-            string playerName = ConsoleHandler.GetPlayerName("First");
-            m_Player1 = new Player(playerName, ePlayers.Player1);
-            if (gameType == eGameType.OnePlayer)
-            {
-                m_Player2 = new Player("Computer", ePlayers.Player2);
-            }
-            else
-            {
-                playerName = ConsoleHandler.GetPlayerName("Second");
-                m_Player2 = new Player(playerName, ePlayers.Player2);
-            }
-        }
-
-        private bool startPlay(eGameType i_GameType)
+        private bool startPlay(eGameType i_GameType, GameBoard i_Board)
         {
             bool exitGame = false;
-            bool canPlayerOnePlay = Controller.ListAllPossibleMoves(m_Player1, m_Board);
+            bool canPlayerOnePlay = m_Player1.GetValidateMoves(i_Board).Count > 0;
 
             while (true)
             {
                 if (canPlayerOnePlay)
                 {
-                    AutoPlay.PlayRandom(m_Player1, m_Board);
-                    //exitGame = playTurn(m_Player1);
+                    exitGame = playTurn(m_Player1);
                 }
 
-                bool canPlayerTwoPlay = Controller.ListAllPossibleMoves(m_Player2, m_Board);
+                bool canPlayerTwoPlay = m_Player2.GetValidateMoves(i_Board).Count > 0;
+
                 if((!canPlayerOnePlay && !canPlayerTwoPlay) || exitGame)
                 {
                     break;
@@ -74,7 +59,8 @@
                     }
                 }
 
-                canPlayerOnePlay = Controller.ListAllPossibleMoves(m_Player1, m_Board);
+                canPlayerOnePlay = m_Player1.GetValidateMoves(i_Board).Count > 0;
+
                 if((!canPlayerOnePlay && !canPlayerTwoPlay) || exitGame)
                 {
                     break;
@@ -88,7 +74,6 @@
 
             if (!exitGame)
             {
-                Controller.UpdatePlayersScore(m_Player1, m_Player2, m_Board);
                 View.ShowScore(m_Player1, m_Player2, m_Board);
             }
 
@@ -119,6 +104,21 @@
             }
 
             return exitGame;
+        }
+
+        private void setPlayers(eGameType gameType)
+        {
+            string playerName = ConsoleHandler.GetPlayerName("First");
+            m_Player1 = new Player(playerName, ePlayers.Player1, m_Board);
+            if (gameType == eGameType.OnePlayer)
+            {
+                m_Player2 = new Player("Computer", ePlayers.Player2, m_Board);
+            }
+            else
+            {
+                playerName = ConsoleHandler.GetPlayerName("Second");
+                m_Player2 = new Player(playerName, ePlayers.Player2, m_Board);
+            }
         }
     }
 }
