@@ -4,7 +4,7 @@
 
     public class View
     {
-        public static void DrawBoard(i_GameBoard i_GameBoard)
+        public static void DrawBoard(GameBoard i_GameBoard)
         {
             int boardSize = i_GameBoard.Size;
             ePlayers[,] board = i_GameBoard.Board;
@@ -65,7 +65,7 @@
             throw new Exception("Couldn't find a cell sign");
         }
 
-        internal static void ShowScore(Player i_FirstPlayer, Player i_SecondPlayer, i_GameBoard i_Board)
+        internal static void ShowScore(Player i_FirstPlayer, Player i_SecondPlayer, GameBoard i_Board)
         {
             string winnerMsg = @"{0} IS THE WINNER!!!
 

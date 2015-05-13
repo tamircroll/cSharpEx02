@@ -11,7 +11,7 @@ namespace Othello
         private DateTime? m_LastUpdateBoard;
         private List<string> m_ValidateMoves;
 
-        public Player(string i_Name, ePlayers i_PlayerEnum, i_GameBoard i_Board)
+        public Player(string i_Name, ePlayers i_PlayerEnum, GameBoard i_Board)
         {
             r_Name = i_Name;
             r_PlayerEnum = i_PlayerEnum;
@@ -20,7 +20,7 @@ namespace Othello
             m_ValidateMoves = Controller.ListAllPossibleMoves(this, i_Board);
         }
 
-        public int Score(i_GameBoard i_Board)
+        public int Score(GameBoard i_Board)
         {
             int m_Score = 0;
 
@@ -43,7 +43,7 @@ namespace Othello
             set { m_ValidateMoves = value; }
         }
 
-        public List<string> GetValidateMoves(i_GameBoard i_Board)
+        public List<string> GetValidateMoves(GameBoard i_Board)
         {
             if (m_LastUpdateBoard != i_Board.LastUpdate)
             {

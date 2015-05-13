@@ -7,13 +7,13 @@
         private const string k_ExitGame = "Q";
         private const int k_AutoPlayerRecDepth = 2;
         private Player m_Player1, m_Player2;
-        private i_GameBoard m_Board;
+        private GameBoard m_Board;
 
         public bool StartNewGame()
         {
             eGameType gameType = ConsoleHandler.ChooseGameType();
             int boardSize = ConsoleHandler.GetBoardSize();
-            m_Board = new i_GameBoard(boardSize);
+            m_Board = new GameBoard(boardSize);
 
             setPlayers(gameType);
             bool keepPlay = !startPlay(gameType, m_Board);
@@ -21,7 +21,7 @@
             return keepPlay;
         }
 
-        private bool startPlay(eGameType i_GameType, i_GameBoard i_Board)
+        private bool startPlay(eGameType i_GameType, GameBoard i_Board)
         {
             bool exitGame = false;
             bool canPlayerOnePlay = m_Player1.GetValidateMoves(i_Board).Count > 0;

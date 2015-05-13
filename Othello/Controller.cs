@@ -4,13 +4,13 @@
 
     public class Controller
     {
-        public static bool TryPlayMove(Player i_Player, string i_ChosenCell, i_GameBoard i_Board)
+        public static bool TryPlayMove(Player i_Player, string i_ChosenCell, GameBoard i_Board)
         {
             string emptyMsg = string.Empty;
             return TryPlayMove(i_Player, i_ChosenCell, ref emptyMsg, i_Board);
         }
 
-        public static bool TryPlayMove(Player i_Player, string i_ChosenCell, ref string o_Msg, i_GameBoard i_Board)
+        public static bool TryPlayMove(Player i_Player, string i_ChosenCell, ref string o_Msg, GameBoard i_Board)
         {
             int row;
             bool validMove = false;
@@ -44,7 +44,7 @@
             return validMove;
         }
 
-        public static void ExecutePlayMove(int i_Row, int i_Column, Player i_Player, i_GameBoard i_Board)
+        public static void ExecutePlayMove(int i_Row, int i_Column, Player i_Player, GameBoard i_Board)
         {
             for (int rowMoveDirection = -1; rowMoveDirection <= 1; rowMoveDirection++)
             {
@@ -63,7 +63,7 @@
             i_Board[i_Row, i_Column] = i_Player.PlayerEnum;
         }
 
-        public static List<string> ListAllPossibleMoves(Player i_Player, i_GameBoard i_Board)
+        public static List<string> ListAllPossibleMoves(Player i_Player, GameBoard i_Board)
         {
             List<string> validateMoves = new List<string>();
 
@@ -83,7 +83,7 @@
             return validateMoves;
         }
 
-        private static void eatPiecesInDirection(int i_Row, int i_Column, int i_moveRow, int i_MoveColumn, Player i_Player, i_GameBoard i_Board)
+        private static void eatPiecesInDirection(int i_Row, int i_Column, int i_moveRow, int i_MoveColumn, Player i_Player, GameBoard i_Board)
         {
             do
             {
@@ -94,7 +94,7 @@
             while (i_Board[i_Row + i_moveRow, i_Column + i_MoveColumn] != i_Player.PlayerEnum);
         }
 
-        private static bool canEat(int i_Row, int i_Column, int i_RowDirection, int i_ColumnDirection, Player i_Player, i_GameBoard i_Board)
+        private static bool canEat(int i_Row, int i_Column, int i_RowDirection, int i_ColumnDirection, Player i_Player, GameBoard i_Board)
         {
             int numOfPiecesToEat = 0;
             bool canEat = false;
@@ -125,7 +125,7 @@
             return canEat;
         }
 
-        private static bool IsValidMove(int i_Row, int i_Column, Player i_Player, i_GameBoard i_Board)
+        private static bool IsValidMove(int i_Row, int i_Column, Player i_Player, GameBoard i_Board)
         {
             bool validMove = false;
 
@@ -152,7 +152,7 @@
             return validMove;
         }
 
-        private static bool inputIsCell(string i_RowStr, char i_Column, out int o_Row, i_GameBoard i_Board)
+        private static bool inputIsCell(string i_RowStr, char i_Column, out int o_Row, GameBoard i_Board)
         {
             bool canParse = int.TryParse(i_RowStr, out o_Row);
 
@@ -173,7 +173,7 @@
             return canParse;
         }
 
-        private static bool isMoveInValidMovesList(int i_Row, int i_Column, Player i_Player, i_GameBoard i_Board)
+        private static bool isMoveInValidMovesList(int i_Row, int i_Column, Player i_Player, GameBoard i_Board)
         {
             return i_Player.GetValidateMoves(i_Board).Contains(string.Format("{0},{1}", i_Row, i_Column));
         }
