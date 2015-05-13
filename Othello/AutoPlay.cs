@@ -25,9 +25,13 @@
             {
                 GameBoard clonedBoard = i_Board.CloneBoard();
                 rowAndCol = getRowAndCol(move);
-
                 Controller.ExecutePlayMove(rowAndCol[k_Row], rowAndCol[k_Column], i_AutoPlayer, clonedBoard);
                 int curScore = calcRecursiveMoveMinMax(i_AutoPlayer, i_Rival, clonedBoard, i_RecDepth);
+
+                if (isCorner(i_Board.Size, rowAndCol))
+                {
+                    curScore *= 2;
+                }
 
                 if (bestScore <= curScore)
                 {
@@ -98,13 +102,13 @@
             return maxScore;
         }
 
-        private static int calcScore(Player i_AutoPlayer, GameBoard boardClone, int[] i_RowAndCol)
+        private static int calcScore(Player i_AutoPlayer, GameBoard i_Board, int[] i_RowAndCol)
         {
             int corner = 1;
-            int score = i_AutoPlayer.Score(boardClone);
-            int flexability = i_AutoPlayer.GetValidateMoves(boardClone).Count;
+            int score = i_AutoPlayer.Score(i_Board);
+            int flexability = i_AutoPlayer.GetValidateMoves(i_Board).Count;
 
-            if (isCorner(boardClone, i_RowAndCol))
+            if (isCorner(i_Board.Size, i_RowAndCol))
             {
                 corner = 2;
             }
@@ -112,12 +116,12 @@
             return (score + flexability) * corner;
         }
 
-        private static bool isCorner(GameBoard i_BoardClone, int[] i_RowAndCol)
+        private static bool isCorner(int i_BoardSize, int[] i_RowAndCol)
         {
             return (i_RowAndCol[k_Row] == 0 && i_RowAndCol[k_Column] == 0) ||
-                   (i_RowAndCol[k_Row] == i_BoardClone.Size - 1 && i_RowAndCol[k_Column] == 0) ||
-                   (i_RowAndCol[k_Row] == i_BoardClone.Size - 1 && i_RowAndCol[k_Column] == i_BoardClone.Size - 1) ||
-                   (i_RowAndCol[k_Row] == 0 && i_RowAndCol[k_Column] == i_BoardClone.Size - 1);
+                   (i_RowAndCol[k_Row] == i_BoardSize - 1 && i_RowAndCol[k_Column] == 0) ||
+                   (i_RowAndCol[k_Row] == i_BoardSize - 1 && i_RowAndCol[k_Column] == i_BoardSize - 1) ||
+                   (i_RowAndCol[k_Row] == 0 && i_RowAndCol[k_Column] == i_BoardSize - 1);
         }
 
         private static int[] getRowAndCol(string i_CellStr)
