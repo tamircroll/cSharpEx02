@@ -4,10 +4,9 @@
 
     public class AutoPlay
     {
-        private const int k_Row = 0;
-        private const int k_Column = 1;
+        private const int k_Row = 0, k_Column = 1;
 
-        internal static void PlayRandom(Player i_Player, GameBoard i_Board)
+        internal static void PlayRandom(Player i_Player, i_GameBoard i_Board)
         {
             int rndIndex = new Random().Next(i_Player.GetValidateMoves(i_Board).Count);
             string rndCellStr = i_Player.GetValidateMoves(i_Board)[rndIndex];
@@ -16,103 +15,109 @@
             Controller.ExecutePlayMove(rowAndCol[k_Row], rowAndCol[k_Column], i_Player, i_Board);
         }
 
-        internal static void SmartPlay(Player i_AutoPlayer, Player i_Rival, GameBoard i_Board, int iRecDepth)
+        internal static void SmartPlay(Player i_AutoPlayer, Player i_Rival, i_GameBoard i_Board, int iRecDepth)
         {
-            string[] bestScore = null;
+            string bestMove = null;
+            int bestScore = 0;
+            int[] rowAndCol;
 
             foreach (string move in i_AutoPlayer.GetValidateMoves(i_Board))
             {
-                GameBoard clonedBoard = i_Board.CloneBoard();
-                Controller.TryPlayMove(i_AutoPlayer, move, clonedBoard);
+                i_GameBoard clonedBoard = i_Board.CloneBoard();
+                rowAndCol = getRowAndCol(move);
 
-                string[] curScore = calcMoveMinMax(i_AutoPlayer, i_Rival, clonedBoard, iRecDepth);
-                if (bestScore == null)
+                Controller.ExecutePlayMove(rowAndCol[k_Row], rowAndCol[k_Column], i_AutoPlayer, clonedBoard);
+                int curScore = calcRecursiveMoveMinMax(i_AutoPlayer, i_Rival, clonedBoard, iRecDepth);
+
+                if (bestScore <= curScore)
                 {
+                    bestMove = move;
                     bestScore = curScore;
                 }
-
-                bestScore = getBetterScore(bestScore, curScore);
             }
 
-            int[] rowAndCol = getRowAndCol(bestScore[0]);
-            Controller.ExecutePlayMove(rowAndCol[0], rowAndCol[1], i_AutoPlayer, i_Board);
+            rowAndCol = getRowAndCol(bestMove);
+            Controller.ExecutePlayMove(rowAndCol[k_Row], rowAndCol[k_Column], i_AutoPlayer, i_Board);
         }
 
-        private static string[] calcMoveMinMax(Player i_AutoPlayer, Player i_Rival, GameBoard i_Board, int iRecDepth)
+        private static int calcRecursiveMoveMinMax(Player i_AutoPlayer, Player i_Rival, i_GameBoard i_Board, int iRecDepth)
         {
-            string[] toRetuen = null;
-            
+            int minScore = int.MaxValue;
+
             foreach (string rivalMove in i_Rival.GetValidateMoves(i_Board))
             {
-                Player playerClone = i_AutoPlayer;
-                Player rivalClone = i_Rival;
-                GameBoard boardClone = i_Board.CloneBoard();
+                int[] rowAndCol = getRowAndCol(rivalMove);
+                i_GameBoard boardClone = i_Board.CloneBoard();
+                Controller.ExecutePlayMove(rowAndCol[k_Row], rowAndCol[k_Column], i_Rival, boardClone);
+                int curScore = recursiveHelper(i_AutoPlayer, i_Rival, boardClone, iRecDepth - 1);
 
-                Controller.TryPlayMove(rivalClone, rivalMove, boardClone);
-
-                string[] curScore = calcMoveHelper(i_AutoPlayer, rivalClone, boardClone.CloneBoard(), iRecDepth - 1);
-                if (toRetuen == null)
+                if (minScore > curScore)
                 {
-                    toRetuen = curScore;
+                    minScore = curScore;
                 }
-
-                toRetuen = getWorstScore(toRetuen, curScore);
             }
 
-            if (toRetuen == null)
+            if (minScore == int.MaxValue)
             {
-                toRetuen = calcMoveHelper(i_AutoPlayer, i_Rival, i_Board.CloneBoard(), iRecDepth - 1);
+                minScore = recursiveHelper(i_AutoPlayer, i_Rival, i_Board, iRecDepth - 1);
             }
 
-            return toRetuen;
+            return minScore;
         }
 
-        private static string[] calcMoveHelper(Player i_AutoPlayer, Player i_Rival, GameBoard i_Board, int iRecDepth)
+        private static int recursiveHelper(Player i_AutoPlayer, Player i_Rival, i_GameBoard i_Board, int iRecDepth)
         {
-            string[] bestScore = null;
+            int maxScore = 0, curScore = 0;
 
             foreach (string playerlMove in i_AutoPlayer.GetValidateMoves(i_Board))
             {
-                Player player = i_AutoPlayer;
-                GameBoard boardClone = i_Board.CloneBoard();
+                i_GameBoard boardClone = i_Board.CloneBoard();
+                int[] rowAndCol = getRowAndCol(playerlMove);
+                Controller.ExecutePlayMove(rowAndCol[k_Row], rowAndCol[k_Column], i_AutoPlayer, boardClone);
 
-                Controller.TryPlayMove(player, playerlMove, boardClone);
-                string[] curScore =
+                if (iRecDepth == 0)
                 {
-                    playerlMove,
-                    (player.Score(boardClone) + player.GetValidateMoves(boardClone).Count).ToString()
-                };
-
-                if (bestScore == null)
+                    curScore = calcScore(i_AutoPlayer, boardClone, rowAndCol);
+                }
+                else
                 {
-                    bestScore = curScore;
+                    curScore = calcRecursiveMoveMinMax(i_AutoPlayer, i_Rival, boardClone, iRecDepth);
                 }
 
-                bestScore = (iRecDepth == 0)
-                    ? getBetterScore(bestScore, curScore)
-                    : calcMoveMinMax(player, i_Rival, boardClone.CloneBoard(), iRecDepth);
+                if (maxScore < curScore)
+                {
+                    maxScore = curScore;
+                }
             }
 
-            return bestScore;
+            if (iRecDepth == 0 && maxScore == 0)
+            {
+                maxScore = int.MaxValue;
+            }
+
+            return maxScore;
         }
 
-        private static string[] getBetterScore(string[] i_BestScore, string[] i_CurScore)
+        private static int calcScore(Player i_AutoPlayer, i_GameBoard boardClone, int[] i_RowAndCol)
         {
-            int bestScore, curScore;
+            int corner = 1;
+            int score = i_AutoPlayer.Score(boardClone);
+            int flexability = i_AutoPlayer.GetValidateMoves(boardClone).Count;
 
-            int.TryParse(i_BestScore[1], out bestScore);
-            int.TryParse(i_CurScore[1], out curScore);
+            if (isCorner(boardClone, i_RowAndCol))
+            {
+                corner = 2;
+            }
 
-            return (bestScore > curScore) ? i_BestScore : i_CurScore;
+            return (score + flexability) * corner;
         }
 
-        private static string[] getWorstScore(string[] i_BestScore, string[] i_CurScore)
+        private static bool isCorner(i_GameBoard boardClone, int[] i_RowAndCol)
         {
-            int bestScore, curScore;
-            int.TryParse(i_BestScore[1], out bestScore);
-            int.TryParse(i_CurScore[1], out curScore);
-
-            return (bestScore < curScore) ? i_BestScore : i_CurScore;
+            return (i_RowAndCol[k_Row] == 0 && i_RowAndCol[k_Column] == 0) ||
+                   (i_RowAndCol[k_Row] == boardClone.Size - 1 && i_RowAndCol[k_Column] == 0) ||
+                   (i_RowAndCol[k_Row] == boardClone.Size - 1 && i_RowAndCol[k_Column] == boardClone.Size - 1) ||
+                   (i_RowAndCol[k_Row] == 0 && i_RowAndCol[k_Column] == boardClone.Size - 1);
         }
 
         private static int[] getRowAndCol(string i_CellStr)

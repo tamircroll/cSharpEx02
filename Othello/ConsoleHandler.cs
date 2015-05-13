@@ -94,7 +94,7 @@ namespace Othello
             return gameType;
         }
 
-        public static void noMovesMessage(Player i_Player, GameBoard i_Board)
+        public static void noMovesMessage(Player i_Player, i_GameBoard i_Board)
         {
             Ex02.ConsoleUtils.Screen.Clear();
             View.DrawBoard(i_Board);

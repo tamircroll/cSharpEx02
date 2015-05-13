@@ -3,13 +3,13 @@ using System.Collections.Generic;
 
 namespace Othello
 {
-    public class GameBoard
+    public class i_GameBoard
     {
         private readonly int r_Size;
         private readonly ePlayers[,] r_Board;
         private DateTime? m_LastUpdate;
   
-        public GameBoard(int i_Size)
+        public i_GameBoard(int i_Size)
         {
             r_Size = i_Size;
             r_Board = new ePlayers[i_Size, i_Size];
@@ -50,9 +50,9 @@ namespace Othello
             get { return r_Board; }
         }
 
-        public GameBoard CloneBoard()
+        public i_GameBoard CloneBoard()
         {
-            GameBoard cloned = new GameBoard(Size);
+            i_GameBoard cloned = new i_GameBoard(Size);
 
             for (int i = 0; i < Size; i++)
             {
