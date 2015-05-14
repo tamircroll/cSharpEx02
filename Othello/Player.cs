@@ -7,11 +7,11 @@ namespace Othello
     public struct Player
     {
         private readonly string r_Name;
-        private readonly ePlayers r_PlayerEnum;
+        private readonly ePlayer r_PlayerEnum;
         private DateTime? m_LastUpdateBoard;
         private List<string> m_ValidateMoves;
 
-        public Player(string i_Name, ePlayers i_PlayerEnum, GameBoard i_Board)
+        public Player(string i_Name, ePlayer i_PlayerEnum, GameBoard i_Board)
         {
             r_Name = i_Name;
             r_PlayerEnum = i_PlayerEnum;
@@ -59,7 +59,7 @@ namespace Othello
             get { return r_Name; }
         }
 
-        public ePlayers PlayerEnum
+        public ePlayer PlayerEnum
         {
             get { return r_PlayerEnum; }
         }

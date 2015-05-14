@@ -34,12 +34,12 @@
                 }
 
                 bool canPlayerTwoPlay = m_Player2.GetValidateMoves(i_Board).Count > 0;
-
-                if((!canPlayerOnePlay && !canPlayerTwoPlay) || exitGame)
+                bool canPlayerOnePlayAfterTurn = m_Player2.GetValidateMoves(i_Board).Count > 0;
+                if ((!canPlayerOnePlayAfterTurn && !canPlayerTwoPlay) || exitGame)
                 {
                     break;
                 }
-                
+
                 if (!canPlayerOnePlay)
                 {
                     ConsoleHandler.noMovesMessage(m_Player1, m_Board);
@@ -60,8 +60,8 @@
                 }
 
                 canPlayerOnePlay = m_Player1.GetValidateMoves(i_Board).Count > 0;
-
-                if((!canPlayerOnePlay && !canPlayerTwoPlay) || exitGame)
+                bool canPlayerTwoPlayAfterTurn = m_Player2.GetValidateMoves(i_Board).Count > 0;
+                if ((!canPlayerOnePlay && !canPlayerTwoPlayAfterTurn) || exitGame)
                 {
                     break;
                 }
@@ -109,15 +109,16 @@
         private void setPlayers(eGameType gameType)
         {
             string playerName = ConsoleHandler.GetPlayerName("First");
-            m_Player1 = new Player(playerName, ePlayers.Player1, m_Board);
+            m_Player1 = new Player(playerName, ePlayer.Player1, m_Board);
+
             if (gameType == eGameType.OnePlayer)
             {
-                m_Player2 = new Player("Computer", ePlayers.Player2, m_Board);
+                m_Player2 = new Player("Computer", ePlayer.Player2, m_Board);
             }
             else
             {
                 playerName = ConsoleHandler.GetPlayerName("Second");
-                m_Player2 = new Player(playerName, ePlayers.Player2, m_Board);
+                m_Player2 = new Player(playerName, ePlayer.Player2, m_Board);
             }
         }
     }

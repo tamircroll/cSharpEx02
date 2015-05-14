@@ -37,7 +37,7 @@
     <Compile Include="Controller.cs" />
     <Compile Include="ConsoleHandler.cs" />
     <Compile Include="eGameType.cs" />
-    <Compile Include="ePlayers.cs" />
+    <Compile Include="ePlayer.cs" />
     <Compile Include="GameBoard.cs" />
     <Compile Include="Othello.cs" />
     <Compile Include="Player.cs" />

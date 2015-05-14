@@ -29,7 +29,6 @@
                 else
                 {
                     validMove = isMoveInValidMovesList(row, column, i_Player, i_Board);
-
                     if (!validMove)
                     {
                         o_Msg = string.Format("{0}, You can not choose cell {1}, Please play again.", i_Player.Name, i_ChosenCell);
@@ -99,7 +98,7 @@
             int numOfPiecesToEat = 0;
             bool canEat = false;
 
-            if (i_Board[i_Row, i_Column] == ePlayers.NoPlayer)
+            if (i_Board[i_Row, i_Column] == ePlayer.NoPlayer)
             {
                 do
                 {
@@ -119,7 +118,7 @@
 
                     numOfPiecesToEat++;
                 }
-                while (i_Board[i_Row, i_Column] != ePlayers.NoPlayer);
+                while (i_Board[i_Row, i_Column] != ePlayer.NoPlayer);
             }
 
             return canEat;

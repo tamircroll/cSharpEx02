@@ -25,14 +25,10 @@
             {
                 GameBoard clonedBoard = i_Board.CloneBoard();
                 rowAndCol = getRowAndCol(move);
+
                 Controller.ExecutePlayMove(rowAndCol[k_Row], rowAndCol[k_Column], i_AutoPlayer, clonedBoard);
                 int curScore = calcRecursiveMoveMinMax(i_AutoPlayer, i_Rival, clonedBoard, i_RecDepth);
-
-                if (isCorner(i_Board.Size, rowAndCol))
-                {
-                    curScore *= 2;
-                }
-
+                curScore *= doubleIfCorner(i_Board.Size, rowAndCol);
                 if (bestScore <= curScore)
                 {
                     bestMove = move;
@@ -55,10 +51,8 @@
                 Controller.ExecutePlayMove(rowAndCol[k_Row], rowAndCol[k_Column], i_Rival, boardClone);
                 int curScore = recursiveHelper(i_AutoPlayer, i_Rival, boardClone, i_RecDepth - 1);
 
-                if (minScore > curScore)
-                {
-                    minScore = curScore;
-                }
+                curScore /= doubleIfCorner(boardClone.Size, rowAndCol);
+                minScore = Math.Min(minScore, curScore);
             }
 
             if (minScore == int.MaxValue)
@@ -78,20 +72,11 @@
                 GameBoard boardClone = i_Board.CloneBoard();
                 int[] rowAndCol = getRowAndCol(playerlMove);
                 Controller.ExecutePlayMove(rowAndCol[k_Row], rowAndCol[k_Column], i_AutoPlayer, boardClone);
-
-                if (i_RecDepth == 0)
-                {
-                    curScore = calcScore(i_AutoPlayer, boardClone, rowAndCol);
-                }
-                else
-                {
-                    curScore = calcRecursiveMoveMinMax(i_AutoPlayer, i_Rival, boardClone, i_RecDepth);
-                }
-
-                if (maxScore < curScore)
-                {
-                    maxScore = curScore;
-                }
+                curScore = i_RecDepth == 0 ?
+                    calcScore(i_AutoPlayer, boardClone, rowAndCol) :
+                    calcRecursiveMoveMinMax(i_AutoPlayer, i_Rival, boardClone, i_RecDepth);
+                curScore *= doubleIfCorner(boardClone.Size, rowAndCol);
+                maxScore = Math.Max(maxScore, curScore);
             }
 
             if (i_RecDepth == 0 && maxScore == 0)
@@ -104,24 +89,18 @@
 
         private static int calcScore(Player i_AutoPlayer, GameBoard i_Board, int[] i_RowAndCol)
         {
-            int corner = 1;
             int score = i_AutoPlayer.Score(i_Board);
             int flexability = i_AutoPlayer.GetValidateMoves(i_Board).Count;
 
-            if (isCorner(i_Board.Size, i_RowAndCol))
-            {
-                corner = 2;
-            }
-
-            return (score + flexability) * corner;
+            return score + flexability;
         }
 
-        private static bool isCorner(int i_BoardSize, int[] i_RowAndCol)
+        private static int doubleIfCorner(int i_BoardSize, int[] i_RowAndCol)
         {
-            return (i_RowAndCol[k_Row] == 0 && i_RowAndCol[k_Column] == 0) ||
+            return ((i_RowAndCol[k_Row] == 0 && i_RowAndCol[k_Column] == 0) ||
                    (i_RowAndCol[k_Row] == i_BoardSize - 1 && i_RowAndCol[k_Column] == 0) ||
                    (i_RowAndCol[k_Row] == i_BoardSize - 1 && i_RowAndCol[k_Column] == i_BoardSize - 1) ||
-                   (i_RowAndCol[k_Row] == 0 && i_RowAndCol[k_Column] == i_BoardSize - 1);
+                   (i_RowAndCol[k_Row] == 0 && i_RowAndCol[k_Column] == i_BoardSize - 1)) ? 2 : 1;
         }
 
         private static int[] getRowAndCol(string i_CellStr)

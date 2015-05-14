@@ -5,22 +5,22 @@ namespace Othello
     public class GameBoard
     {
         private readonly int r_Size;
-        private readonly ePlayers[,] r_Board;
+        private readonly ePlayer[,] r_Board;
         private DateTime? m_LastUpdate;
   
         public GameBoard(int i_Size)
         {
             r_Size = i_Size;
-            r_Board = new ePlayers[i_Size, i_Size];
+            r_Board = new ePlayer[i_Size, i_Size];
             m_LastUpdate = DateTime.Now;
 
-            r_Board[i_Size / 2, i_Size / 2] = ePlayers.Player1;
-            r_Board[(i_Size / 2) - 1, (i_Size / 2) - 1] = ePlayers.Player1;
-            r_Board[i_Size / 2, (i_Size / 2) - 1] = ePlayers.Player2;
-            r_Board[(i_Size / 2) - 1, i_Size / 2] = ePlayers.Player2;
+            r_Board[i_Size / 2, i_Size / 2] = ePlayer.Player1;
+            r_Board[(i_Size / 2) - 1, (i_Size / 2) - 1] = ePlayer.Player1;
+            r_Board[i_Size / 2, (i_Size / 2) - 1] = ePlayer.Player2;
+            r_Board[(i_Size / 2) - 1, i_Size / 2] = ePlayer.Player2;
         }
 
-        public ePlayers this[int i_X, int i_Y]
+        public ePlayer this[int i_X, int i_Y]
         {
             get
             {
@@ -44,7 +44,7 @@ namespace Othello
             get { return r_Size; }
         }
 
-        public ePlayers[,] Board
+        public ePlayer[,] Board
         {
             get { return r_Board; }
         }

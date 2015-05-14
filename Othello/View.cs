@@ -7,7 +7,7 @@
         public static void DrawBoard(GameBoard i_GameBoard)
         {
             int boardSize = i_GameBoard.Size;
-            ePlayers[,] board = i_GameBoard.Board;
+            ePlayer[,] board = i_GameBoard.Board;
             char column = 'A';
             
             Ex02.ConsoleUtils.Screen.Clear();
@@ -50,15 +50,15 @@
             Console.WriteLine();
         }
 
-        private static string getCellSign(ePlayers i_PlayerEnum)
+        private static string getCellSign(ePlayer i_PlayerEnum)
         {
             switch (i_PlayerEnum)
             {
-                case ePlayers.NoPlayer:
+                case ePlayer.NoPlayer:
                     return " ";
-                case ePlayers.Player1:
+                case ePlayer.Player1:
                     return "X";
-                case ePlayers.Player2:
+                case ePlayer.Player2:
                     return "O";
             }
 

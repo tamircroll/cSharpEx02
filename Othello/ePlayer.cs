@@ -2,7 +2,7 @@
 
 namespace Othello
 {
-    public enum ePlayers : byte
+    public enum ePlayer : byte
     {
         NoPlayer = 0,
         Player1 = 1,
