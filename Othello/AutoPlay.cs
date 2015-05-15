@@ -56,15 +56,15 @@
 
         private static int recursiveHelper(Player i_AutoPlayer, Player i_Rival, GameBoard i_Board, int i_RecDepth)
         {
-            int maxScore = 0, curScore = 0;
+            int maxScore = 0;
 
             foreach (string playerlMove in i_AutoPlayer.GetValidateMoves(i_Board))
             {
                 GameBoard boardClone = i_Board.CloneBoard();
                 int[] rowAndCol = getRowAndCol(playerlMove);
                 Controller.ExecutePlayMove(rowAndCol[k_Row], rowAndCol[k_Column], i_AutoPlayer, boardClone);
-                curScore = (i_RecDepth == 0) ?
-                    calcScore(i_AutoPlayer, boardClone, rowAndCol) :
+                int curScore = (i_RecDepth == 0) ?
+                    calcScore(i_AutoPlayer, boardClone) :
                     calcRecursiveMoveMinMax(i_AutoPlayer, i_Rival, boardClone, i_RecDepth);
                 curScore *= doubleIfCorner(boardClone.Size, rowAndCol);
                 maxScore = Math.Max(maxScore, curScore);
@@ -72,13 +72,13 @@
 
             if (i_RecDepth == 0 && maxScore == 0)
             {
-                maxScore = int.MaxValue;
+                maxScore = calcScore(i_AutoPlayer, i_Board.CloneBoard());
             }
 
             return maxScore;
         }
 
-        private static int calcScore(Player i_AutoPlayer, GameBoard i_Board, int[] i_RowAndCol)
+        private static int calcScore(Player i_AutoPlayer, GameBoard i_Board)
         {
             int score = i_Board.GetScore(i_AutoPlayer.PlayerEnum);
             int flexability = i_AutoPlayer.GetValidateMoves(i_Board).Count;

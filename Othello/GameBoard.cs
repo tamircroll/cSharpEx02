@@ -5,52 +5,52 @@ namespace Othello
     public class GameBoard
     {
         private readonly int r_Size;
-        private readonly ePlayer[,] r_Board;
+        private ePlayer[,] m_Board;
         private DateTime? m_LastUpdate;
         private int m_PlayerOneScore = 2, m_PlayerTwoScore = 2;
   
         public GameBoard(int i_Size)
         {
             r_Size = i_Size;
-            r_Board = new ePlayer[i_Size, i_Size];
+            m_Board = new ePlayer[i_Size, i_Size];
             m_LastUpdate = DateTime.Now;
 
-            r_Board[i_Size / 2, i_Size / 2] = ePlayer.Player1;
-            r_Board[(i_Size / 2) - 1, (i_Size / 2) - 1] = ePlayer.Player1;
-            r_Board[i_Size / 2, (i_Size / 2) - 1] = ePlayer.Player2;
-            r_Board[(i_Size / 2) - 1, i_Size / 2] = ePlayer.Player2;
+            m_Board[i_Size / 2, i_Size / 2] = ePlayer.Player1;
+            m_Board[(i_Size / 2) - 1, (i_Size / 2) - 1] = ePlayer.Player1;
+            m_Board[i_Size / 2, (i_Size / 2) - 1] = ePlayer.Player2;
+            m_Board[(i_Size / 2) - 1, i_Size / 2] = ePlayer.Player2;
         }
 
         public ePlayer this[int i_X, int i_Y]
         {
             get
             {
-                return r_Board[i_X, i_Y];
+                return m_Board[i_X, i_Y];
             }
 
             set
             {
                 m_LastUpdate = DateTime.Now;
-                if (value == ePlayer.Player1 && r_Board[i_X, i_Y] == ePlayer.Player2)
+                if (value == ePlayer.Player1 && m_Board[i_X, i_Y] == ePlayer.Player2)
                 {
                     m_PlayerOneScore++;
                     m_PlayerTwoScore--;
                 }
-                else if (value == ePlayer.Player2 && r_Board[i_X, i_Y] == ePlayer.Player1)
+                else if (value == ePlayer.Player2 && m_Board[i_X, i_Y] == ePlayer.Player1)
                 {
                     m_PlayerOneScore--;
                     m_PlayerTwoScore++;
                 }
-                else if (value == ePlayer.Player1 && r_Board[i_X, i_Y] == ePlayer.NoPlayer)
+                else if (value == ePlayer.Player1 && m_Board[i_X, i_Y] == ePlayer.NoPlayer)
                 {
                     m_PlayerOneScore++;
                 }
-                else if (value == ePlayer.Player2 && r_Board[i_X, i_Y] == ePlayer.NoPlayer)
+                else if (value == ePlayer.Player2 && m_Board[i_X, i_Y] == ePlayer.NoPlayer)
                 {
                     m_PlayerTwoScore++;
                 }
 
-                r_Board[i_X, i_Y] = value;
+                m_Board[i_X, i_Y] = value;
             }
         }
 
@@ -66,7 +66,8 @@ namespace Othello
 
         public ePlayer[,] Board
         {
-            get { return r_Board; }
+            get { return m_Board; }
+            set { m_Board = value; }
         }
 
         public int GetScore(ePlayer i_Player)
@@ -86,14 +87,17 @@ namespace Othello
             GameBoard cloned = new GameBoard(Size);
             cloned.m_PlayerOneScore = m_PlayerOneScore;
             cloned.m_PlayerTwoScore = m_PlayerTwoScore;
+            ePlayer[,] board = new ePlayer[Size, Size];
 
             for (int row = 0; row < Size; row++)
             {
                 for (int col = 0; col < Size; col++)
                 {
-                    cloned[row, col] = this[row, col];
+                    board[row, col] = this[row, col];
                 }
             }
+
+            cloned.Board = board;
 
             return cloned;
         }
