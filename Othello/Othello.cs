@@ -34,7 +34,7 @@
                 }
 
                 bool canPlayerTwoPlay = m_Player2.GetValidateMoves(i_Board).Count > 0;
-                bool canPlayerOnePlayAfterTurn = m_Player2.GetValidateMoves(i_Board).Count > 0;
+                bool canPlayerOnePlayAfterTurn = m_Player1.GetValidateMoves(i_Board).Count > 0;
                 if ((!canPlayerOnePlayAfterTurn && !canPlayerTwoPlay) || exitGame)
                 {
                     break;
