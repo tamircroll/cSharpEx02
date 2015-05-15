@@ -5,7 +5,7 @@
     public class Othello
     {
         private const string k_ExitGame = "Q";
-        private const int k_AutoPlayerRecDepth = 3;
+        private const int k_AutoPlayerRecDepth = 2;
         private Player m_Player1, m_Player2;
         private GameBoard m_Board;
 

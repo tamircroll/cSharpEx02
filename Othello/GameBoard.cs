@@ -87,11 +87,11 @@ namespace Othello
             cloned.m_PlayerOneScore = m_PlayerOneScore;
             cloned.m_PlayerTwoScore = m_PlayerTwoScore;
 
-            for (int i = 0; i < Size; i++)
+            for (int row = 0; row < Size; row++)
             {
-                for (int j = 0; j < Size; j++)
+                for (int col = 0; col < Size; col++)
                 {
-                    cloned[i, j] = this[i, j];
+                    cloned[row, col] = this[row, col];
                 }
             }
 

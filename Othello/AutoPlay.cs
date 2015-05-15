@@ -6,15 +6,6 @@
     {
         private const int k_Row = 0, k_Column = 1;
 
-        internal static void PlayRandom(Player i_Player, GameBoard i_Board)
-        {
-            int rndIndex = new Random().Next(i_Player.GetValidateMoves(i_Board).Count);
-            string rndCellStr = i_Player.GetValidateMoves(i_Board)[rndIndex];
-            int[] rowAndCol = getRowAndCol(rndCellStr); 
-
-            Controller.ExecutePlayMove(rowAndCol[k_Row], rowAndCol[k_Column], i_Player, i_Board);
-        }
-
         internal static void SmartPlay(Player i_AutoPlayer, Player i_Rival, GameBoard i_Board, int i_RecDepth)
         {
             string bestMove = null;
