@@ -102,7 +102,7 @@
             Ex02.ConsoleUtils.Screen.Clear();
             View.DrawBoard(i_Board);
             Console.WriteLine(string.Format(
-@"
+                @"
   ▄▀  ██   █▀▄▀█ ▄███▄       ████▄     ▄   ▄███▄   █▄▄▄▄  ▄ 
 ▄▀    █ █  █ █ █ █▀   ▀      █   █      █  █▀   ▀  █  ▄▀ █  
 █ ▀▄  █▄▄█ █ ▄ █ ██▄▄        █   █ █     █ ██▄▄    █▀▀▌ █   
@@ -112,17 +112,17 @@
        ▀                              ▐                     
 
 {0} have {1} points, {2} have {3} points.",
-                    i_FirstPlayer.Name,
-                    i_FirstPlayer.Score(i_Board),
-                    i_SecondPlayer.Name,
-                    i_SecondPlayer.Score(i_Board)));
+                i_FirstPlayer.Name,
+                i_Board.GetScore(i_FirstPlayer.PlayerEnum),
+                i_SecondPlayer.Name,
+                i_Board.GetScore(i_SecondPlayer.PlayerEnum)));
 
-            if (i_FirstPlayer.Score(i_Board) > i_SecondPlayer.Score(i_Board))
+            if (i_Board.GetScore(i_FirstPlayer.PlayerEnum) > i_Board.GetScore(i_SecondPlayer.PlayerEnum))
             {
                 Console.WriteLine(string.Format(winnerMsg, i_FirstPlayer.Name));
                 Console.ReadLine();
             }
-            else if (i_SecondPlayer.Score(i_Board) > i_FirstPlayer.Score(i_Board))
+            else if (i_Board.GetScore(i_SecondPlayer.PlayerEnum) > i_Board.GetScore(i_FirstPlayer.PlayerEnum))
             {
                 Console.WriteLine(string.Format(winnerMsg, i_SecondPlayer.Name));
                 Console.ReadLine();

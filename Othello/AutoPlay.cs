@@ -72,7 +72,7 @@
                 GameBoard boardClone = i_Board.CloneBoard();
                 int[] rowAndCol = getRowAndCol(playerlMove);
                 Controller.ExecutePlayMove(rowAndCol[k_Row], rowAndCol[k_Column], i_AutoPlayer, boardClone);
-                curScore = i_RecDepth == 0 ?
+                curScore = (i_RecDepth == 0) ?
                     calcScore(i_AutoPlayer, boardClone, rowAndCol) :
                     calcRecursiveMoveMinMax(i_AutoPlayer, i_Rival, boardClone, i_RecDepth);
                 curScore *= doubleIfCorner(boardClone.Size, rowAndCol);
@@ -89,7 +89,7 @@
 
         private static int calcScore(Player i_AutoPlayer, GameBoard i_Board, int[] i_RowAndCol)
         {
-            int score = i_AutoPlayer.Score(i_Board);
+            int score = i_Board.GetScore(i_AutoPlayer.PlayerEnum);
             int flexability = i_AutoPlayer.GetValidateMoves(i_Board).Count;
 
             return score + flexability;

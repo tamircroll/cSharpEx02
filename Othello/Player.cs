@@ -20,24 +20,6 @@ namespace Othello
             m_ValidateMoves = Controller.ListAllPossibleMoves(this, i_Board);
         }
 
-        public int Score(GameBoard i_Board)
-        {
-            int m_Score = 0;
-
-            for (int row = 0; row < i_Board.Size; row++)
-            {
-                for (int column = 0; column < i_Board.Size; column++)
-                {
-                    if (i_Board[row, column] == r_PlayerEnum)
-                    {
-                        m_Score++;
-                    }
-                }
-            }
-
-            return m_Score;
-        }
-
         public List<string> ValidateMoves
         {
             set { m_ValidateMoves = value; }
