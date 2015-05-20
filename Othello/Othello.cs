@@ -5,7 +5,7 @@
     public class Othello
     {
         private const string k_ExitGame = "Q";
-        private const int k_AutoPlayerRecDepth = 2;
+        private const int k_AutoPlayerRecDepth = 3;
         private Player m_Player1, m_Player2;
         private GameBoard m_Board;
 
@@ -82,7 +82,7 @@
 
         private bool playTurn(Player i_Player)
         {
-            string msg = string.Format("{0}, Please choose a cell and press Enter:", i_Player.Name);
+            string msg = string.Format("{0}, Please choose a cell (Column and Row) and press Enter:", i_Player.Name);
             bool exitGame = false;
 
             while (true)
